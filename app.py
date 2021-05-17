@@ -10,6 +10,9 @@ def index():
 def login():
     return render_template("/login.html")
 
+@app.route("/create_account")
+def create_account():
+    return render_template("/create_account.html")
 
 
 
