@@ -1,11 +1,15 @@
 {% extends "layout.html" %}
 
 {% block header %}
-  <h1>{% block title %}Hello Student{% endblock %}</h1>
+{% if session['email'] %}
+  <h1>{% block title %}Hello Student: {{session['email']}}{% endblock %}</h1>
+{% else %}
+<h1>Hello Student</h1>
+{% endif %}
 {% endblock %}
 
 
-{% block body%}
+{% block content %}
 
 <div class="row mb-2 mx-5">
     <div class="col-md-6">

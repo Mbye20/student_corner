@@ -5,8 +5,8 @@
 {% block nav%}{% endblock %}
 
 
-{% block body %}
-<form class="col-8 col-sm-6 col-md-4 mx-auto">
+{% block content %}
+<form class="col-8 col-sm-6 col-md-4 mx-auto" method="POST">
     <h1 class="h3 mb-3 fw-normal">Please Create An Account</h1>
 
     <div class="form-floating my-3">
@@ -22,7 +22,25 @@
       <input type="email" class="form-control" id="floatingemail" placeholder="Email Address" required>
       <label for="floatingemail">Email Address</label>
     </div>
-
+    <div class="row">
+        <div class="form-floating my-3 col-6">
+            <input type="password" name="password1" class="form-control" id="floatingPassword" placeholder="Password" required>
+            <label for="floatingPassword">Password</label>
+        </div>
+        <div class="form-floating my-3 col-6">
+            <input type="password" name="password2" class="form-control" id="floatingConfirmPassword" placeholder="Confirm Password" required>
+            <label for="floatingConfirmPassword">Confirm Password</label>
+        </div>
+    </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flashes">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
     
     <button class="w-100 btn btn-lg btn-primary" type="submit">Create Account</button>
 </form>
