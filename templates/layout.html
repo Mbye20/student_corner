@@ -7,11 +7,11 @@
 
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
         <title>{% block title%}{% endblock %}</title>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">Student Corner</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,30 +35,48 @@
                             User
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                {% if session["email"] %}
-                                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                                    <li><a class="dropdown-item" href="#">My Posts</a></li>
+                                {% if current_user.is_authenticated %}
+                                    <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('post') }}">My Posts</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">My Account</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('profile') }}">My Account</a></li>
                                 {% else %}
-                                    <li><a class="dropdown-item" href="/login">Login</a></li>
-                                    <li><a class="dropdown-item" href="/create_account">Create Account</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('login') }}">Login</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('create_account') }}">Create Account</a></li>
                                 {% endif %}
                             </ul>
                         </li>
                     </ul>
                     
                 </div>
-            </div>
+            </div>             
         </nav>
 
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
 
+            <div class="container">
+                <div class="row justify-content-md-center">
+                    <ul class="flashes col-md-6">
+                        {% for message in messages %}
+                        <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+                            <strong>{{ message }}</strong> 
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+        {% endif %}
+        {% endwith %}
+    
         <header>
             {% block header %}{% endblock %}
         </header>
 
         <div class="container-fluid">
-        {%block content%}
+        {% block content %}
         {% endblock %}
         </div>
 
