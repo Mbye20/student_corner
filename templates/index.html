@@ -2,15 +2,14 @@
 
 {% block header %}
 {% if current_user.is_authenticated %}
-  <h1>{% block title %}Hello Student: {{ current_user.firstname }} {% endblock %}</h1>
+    <h1>{% block title %}Hello Student: {{ current_user.firstname }} {% endblock %}</h1>
 {% else %}
-<h1>Hello Student</h1>
+    <h1>Hello Student</h1>
 {% endif %}
 {% endblock %}
 
 
 {% block content %}
-
 <div class="row mb-2 mx-5">
     <div class="col-md-6">
         <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
