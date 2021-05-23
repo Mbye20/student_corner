@@ -24,10 +24,15 @@
 
                 <div class="container">
                     <div class="row justify-content-md-center">
-                        <ul class="flashes col-md-6">
+                        <ul class="flashes col-md-10">
                             {% for category, message in messages %}
                             {% if category == "error" %}
                             <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+                                <strong>{{ message }}</strong> 
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            {% elif category == "danger" %}
+                            <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
                                 <strong>{{ message }}</strong> 
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>

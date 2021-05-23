@@ -1,4 +1,6 @@
+from html.entities import html5
 import os
+from re import subn
 from flask import Flask, request, render_template, redirect, url_for, flash, session
 from flask_login import UserMixin, login_manager, login_user, LoginManager, logout_user, current_user
 from datetime import timedelta, datetime
@@ -76,7 +78,7 @@ class User(UserMixin, db.Model):
 
 
 #Name the serializer for the email confirmation
-serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
 #Add user loader to retrieve user id from the database for user login
 @login_manager.user_loader
 def load_user(user_id):
@@ -108,11 +110,13 @@ def login():
 
         session.permanent = True
         #Send Message through to user after log in
-        msg = Message("Hello %s, " %user.firstname, recipients= [user.email])
-        msg.body = "You have been Logged in successfully. Cheers!"
-        mail.send(msg)
+        # msg = Message("Hello %s, " %user.firstname, recipients= [user.email])
+        # msg.body = "You have been Logged in successfully. Cheers!"
+        # mail.send(msg)
         ### session["email"] = email
         login_user(user, remember= remember)
+        if user.confirmed == False:
+            flash("Your email had not been confirmed. Please click this link to confirm your email.", "error")
         return redirect(url_for("index"))
 
     #Return login page if request is get
@@ -150,15 +154,24 @@ def create_account():
             flash("An account has already been created with this email address.", "error")
             return redirect(url_for("create_account"))
 
-        new_user = User(firstname= firstname, lastname=lastname, email=email, password = generate_password_hash(password1), confirmed=False) 
+        new_user = User(firstname= firstname, lastname=lastname, email=email, password = generate_password_hash(password1), admin=False, confirmed=False, confirmed_on= None)
+        # if new_user.confirmed == False:
+        #     flash("An email has been sent to you email address. Please Click it to confirm your email address.")
+
         db.session.add(new_user)
         db.session.commit()
 
         #For user email confirmation token
+        token = generate_confirmation_token(user.email)
+        confirm_url = url_for("user.confirm_email", token = token, _external = True)
+        html = render_template("activate.html", confirm_url = confirm_url)
+        subject = "Email Confirmation"
+
+        send_email(user.email, subject, html)
 
         #### print(User.query.order_by(User.username).all())
-        
-        return redirect(url_for('index'))
+        flash('A confirmation email has been sent via email.', 'success')
+        return redirect(url_for('login'))
         
 
     else:
@@ -167,14 +180,45 @@ def create_account():
 # db.session.delete(User)
 # db.session.commit()
 
+serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+#### Create token generator function
+def generate_confirmation_token(email):
+    return serializer.dumps(email, salt= "activate")
 
+def confirm_token(token):
+    try:
+        email = serializer.loads(token, salt="activate", max_age=7200)
+    
+    except:
+        return False
+    return email
+#### Add a new route to handle the email confirmation
 @app.route("/confirm/<token>")
-@login_required
 def confirm_email(token):
-    email = serializer.loads(token, salt=app.config['SECURITY_PASSWORD_SALT'], max_age=7200)
-    
+    try:
+        email = confirm_token(token)
+    except:
+        flash("The confirmation link is invalid or has expired.", "danger")
+    user = User.query.filter_by(email = email).first_or_404()
+    if user.confirmed:
+        flash("Your account is successfully confirmed. Please login.")
+    else:
+        user.confirmed = True
+        user.confirmed_on = datetime.now()
+        db.session.add(user)
+        db.session.commit()
+    return redirect(url_for("login"))
 
-    
+def send_email(to, subject, template):
+    msg = Message(
+        subject,
+        recipients= [to],
+        html=template,
+    )
+    mail.send(msg)
+
+
+
 @app.route('/profile')
 @login_required
 def profile():
