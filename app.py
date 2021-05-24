@@ -1,6 +1,4 @@
-from html.entities import html5
 import os
-from re import subn
 from flask import Flask, request, render_template, redirect, url_for, flash, session
 from flask_login import UserMixin, login_manager, login_user, LoginManager, logout_user, current_user
 from datetime import timedelta, datetime
@@ -20,14 +18,14 @@ app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_DEFAULT_SENDER'] = ("Student Corner Web", os.environ.get('MAIL_USERNAME'))
 
 #Register mail on app
 mail = Mail(app)
 #Give a secrete for the session and flashing
 app.secret_key = os.environ.get("SECRET_KEY")
 #Create a security password for flask_mail
-SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT")
+# SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT")
 #Configure session timelimit
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=2)
 #Configure database
@@ -35,6 +33,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -48,7 +48,7 @@ class User(UserMixin, db.Model):
     lastname = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120))
-    admin = db.Column(db.Boolean, nullable=True, default=False)
+    admin = db.Column(db.Boolean, nullable=False, default=False)
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
     confirmed_on = db.Column(db.DateTime, nullable=True)
 
@@ -87,8 +87,8 @@ def load_user(user_id):
 #Main page
 @app.route('/')
 def index():
-    if 'email' in session:
-        return render_template("/index.html")
+    # if 'email' in session:
+    #     return render_template("/index.html")
     return render_template("/index.html")
 
 #Login Page
@@ -109,7 +109,7 @@ def login():
             return redirect(url_for("login"))
 
         session.permanent = True
-        #Send Message through to user after log in
+        #Send Message through gmail to user after log in
         # msg = Message("Hello %s, " %user.firstname, recipients= [user.email])
         # msg.body = "You have been Logged in successfully. Cheers!"
         # mail.send(msg)
@@ -161,42 +161,48 @@ def create_account():
         db.session.add(new_user)
         db.session.commit()
 
-        #For user email confirmation token
-        token = generate_confirmation_token(user.email)
-        confirm_url = url_for("user.confirm_email", token = token, _external = True)
-        html = render_template("activate.html", confirm_url = confirm_url)
-        subject = "Email Confirmation"
+        token = serializer.dumps(email, salt = "confirm")
+        link = url_for("confirm_email", token = token, _external = True)
+        msg = Message("Email Confirmation", recipients = [new_user.email])
+        msg.html = render_template("confirm.html", confirm_url = link)
+        mail.send(msg)
 
-        send_email(user.email, subject, html)
+        flash("An email has been sent to you email address. Please Click it to activate your account.")
+        return redirect(url_for('login'))
+
+        #For user email confirmation token
+        # token = generate_confirmation_token(user.email)
+
+        # confirm_url = url_for("confirm_email", token = token, _external = True)
+        # html = render_template("confirm.html", confirm_url = confirm_url)
+        # subject = "Email Confirmation"
+
+        # send_email(user.email, subject, html)
 
         #### print(User.query.order_by(User.username).all())
-        flash('A confirmation email has been sent via email.', 'success')
-        return redirect(url_for('login'))
+        # flash('A confirmation email has been sent via email.', 'success')
         
 
-    else:
-        return render_template("/create_account.html")
-
-# db.session.delete(User)
-# db.session.commit()
-
-serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-#### Create token generator function
-def generate_confirmation_token(email):
-    return serializer.dumps(email, salt= "activate")
-
-def confirm_token(token):
-    try:
-        email = serializer.loads(token, salt="activate", max_age=7200)
     
-    except:
-        return False
-    return email
+    return render_template("/create_account.html")
+
+
+#### Create token generator function
+# def generate_confirmation_token(email):
+#     return serializer.dumps(email, salt= "activate")
+
+# def confirm_token(token):
+#     try:
+#         email = serializer.loads(token, salt="activate", max_age=7200)
+    
+#     except:
+#         return False
+#     return email
 #### Add a new route to handle the email confirmation
 @app.route("/confirm/<token>")
 def confirm_email(token):
     try:
-        email = confirm_token(token)
+        email = serializer.loads(token, salt="confirm", max_age=7200)
     except:
         flash("The confirmation link is invalid or has expired.", "danger")
     user = User.query.filter_by(email = email).first_or_404()
@@ -209,13 +215,13 @@ def confirm_email(token):
         db.session.commit()
     return redirect(url_for("login"))
 
-def send_email(to, subject, template):
-    msg = Message(
-        subject,
-        recipients= [to],
-        html=template,
-    )
-    mail.send(msg)
+# def send_email(to, subject, template):
+#     msg = Message(
+#         subject,
+#         recipients= [to],
+#         html=template,
+#     )
+#     mail.send(msg)
 
 
 
