@@ -230,10 +230,10 @@ def confirm_email(token):
 def profile():
     return render_template("/profile.html", firstname=current_user.firstname)
 
-@app.route('/post')
-@login_required
-def post():
-    return render_template(url_for("post"))
+# @app.route('/post')
+# @login_required
+# def post():
+#     return render_template(url_for("post"))
 
 
 
