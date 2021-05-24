@@ -2,3 +2,4 @@ __pycache__/
 studenv/
 test.py
 .vscode/
+.env

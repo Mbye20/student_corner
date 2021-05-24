@@ -87,8 +87,6 @@ def load_user(user_id):
 #Main page
 @app.route('/')
 def index():
-    # if 'email' in session:
-    #     return render_template("/index.html")
     return render_template("/index.html")
 
 #Login Page
@@ -241,4 +239,4 @@ def profile():
 
 if __name__ == "__main__":
     db.create_all()
-    # app.run(debug=True)
+    app.run(debug=True)
