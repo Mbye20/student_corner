@@ -29,7 +29,7 @@ app.secret_key = os.environ.get("SECRET_KEY")
 #Configure session timelimit
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=2)
 #Configure database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///studentcorner.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'sqlite:///studentcorner.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -228,10 +228,10 @@ def confirm_email(token):
 def profile():
     return render_template("/profile.html", firstname=current_user.firstname)
 
-# @app.route('/post')
-# @login_required
-# def post():
-#     return render_template(url_for("post"))
+@app.route('/post')
+@login_required
+def post():
+    return render_template(url_for("post"))
 
 
 
