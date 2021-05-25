@@ -29,7 +29,13 @@ app.secret_key = os.environ.get("SECRET_KEY")
 #Configure session timelimit
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=2)
 #Configure database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'sqlite:///studentcorner.sqlite3'
+####Postgresql Database
+# database_uri = os.environ.get('DATABASE_URL')
+# if database_uri.startswith("postgres://"):
+#     uri = database_uri.replace("postgres://", "postgresql://", 1)
+
+#### Configure postgresql database to run om server and sqlite to run on local host
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL?sslmode=require") or 'sqlite:///studentcorner.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
