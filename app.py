@@ -116,6 +116,7 @@ def login():
         if user.confirmed == False:
             flash("Your email had not been confirmed. Please click this link to confirm your email.", "error")
         return redirect(url_for("index"))
+        
 
     #Return login page if request is get
     return render_template("/login.html")
