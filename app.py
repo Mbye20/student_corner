@@ -32,13 +32,13 @@ app.secret_key = environ.get("SECRET_KEY")
 #Configure session timelimit
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=2)
 ####Postgresql Database
-# database_uri = environ.get('DATABASE_URL')
-# if database_uri.startswith("postgres://"):
-#     database_uri = database_uri.replace("postgres://", "postgresql://", 1)
+database_uri = environ.get('DATABASE_URL')
+if database_uri.startswith("postgres://"):
+    database_uri = database_uri.replace("postgres://", "postgresql://", 1)
 
 #Configure database
 #### Configure postgresql database to run om server and sqlite to run on local host
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///studentcorner.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI']= database_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
