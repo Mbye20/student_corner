@@ -11,18 +11,17 @@ from itsdangerous import URLSafeTimedSerializer
 from flask_migrate import Migrate
 load_dotenv()
 #create flask app
-app = Flask(__name__)
-####Configure Email Credential
-app.config['MAIL_SERVER']='smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = environ.get('MAIL_PASSWORD')
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_DEFAULT_SENDER'] = ("Student Corner Web", environ.get('MAIL_USERNAME'))
+def create_app():
+    # create and configure the app
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object('config')
+    app.config.from_pyfile('config.py', silent=True)
 
-#Register mail on app
-mail = Mail(app)
+    return app
+    
+    
+    
+
 #Give a secrete for the session and flashing
 app.secret_key = environ.get("SECRET_KEY")
 #Create a security password for flask_mail

@@ -1,3 +1,10 @@
+from flask_login import UserMixin
+from flask_sqlalchemy import SQLAlchemy
+
+
+db = SQLAlchemy()
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     created = db.Column(db.DateTime, default=datetime.now, nullable=False)
