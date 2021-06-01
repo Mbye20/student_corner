@@ -3,3 +3,5 @@ studenv/
 test.py
 .vscode/
 .env
+instance
+myapp.egg-info
