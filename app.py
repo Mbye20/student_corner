@@ -1,4 +1,7 @@
 import os
+import re
+from os import environ
+from dotenv import load_dotenv
 from flask import Flask, request, render_template, redirect, url_for, flash, session
 from flask_login import UserMixin, login_manager, login_user, LoginManager, logout_user, current_user
 from datetime import timedelta, datetime
@@ -8,34 +11,34 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 from flask_migrate import Migrate
-
+load_dotenv()
 #create flask app
 app = Flask(__name__)
 ####Configure Email Credential
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_USERNAME'] = environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = environ.get('MAIL_PASSWORD')
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_DEFAULT_SENDER'] = ("Student Corner Web", os.environ.get('MAIL_USERNAME'))
+app.config['MAIL_DEFAULT_SENDER'] = ("Student Corner Web", environ.get('MAIL_USERNAME'))
 
 #Register mail on app
 mail = Mail(app)
 #Give a secrete for the session and flashing
-app.secret_key = os.environ.get("SECRET_KEY")
+app.secret_key = environ.get("SECRET_KEY")
 #Create a security password for flask_mail
-# SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT")
+# SECURITY_PASSWORD_SALT = environ.get("SECURITY_PASSWORD_SALT")
 #Configure session timelimit
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=2)
-#Configure database
 ####Postgresql Database
-database_uri = os.environ.get('DATABASE_URL')
-if database_uri.startswith("postgres://"):
-    database_uri = database_uri.replace("postgres://", "postgresql://", 1)
+# database_uri = environ.get('DATABASE_URL')
+# if database_uri.startswith("postgres://"):
+#     database_uri = database_uri.replace("postgres://", "postgresql://", 1)
 
+#Configure database
 #### Configure postgresql database to run om server and sqlite to run on local host
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///studentcorner.sqlite3' or database_uri
+app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///studentcorner.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -71,10 +74,10 @@ class User(UserMixin, db.Model):
 # def create_admin():
 #     """Creates the admin user."""
 #     db.session.add(User(
-#         firstname= os.environ.get('FIRST_NAME'),
-#         lastname= os.environ.get('LAST_NAME'),
-#         email = os.environ.get('MAIL_USERNAME'),
-#         password= generate_password_hash(os.environ.get('MAIL_PASSWORD')),
+#         firstname= environ.get('FIRST_NAME'),
+#         lastname= environ.get('LAST_NAME'),
+#         email = environ.get('MAIL_USERNAME'),
+#         password= generate_password_hash(environ.get('MAIL_PASSWORD')),
 #         admin=True,
 #         confirmed=True,
 #         confirmed_on= datetime.now())
@@ -120,7 +123,9 @@ def login():
         ### session["email"] = email
         login_user(user, remember= remember)
         if user.confirmed == False:
-            flash("Your email had not been confirmed. Please click this link to confirm your email.", "error")
+            flash("Your email had not been confirmed. Please check your inbox to confirm your email address.", "danger")
+            return redirect(url_for("login"))
+
         return redirect(url_for("index"))
         
 
@@ -150,7 +155,7 @@ def create_account():
             flash("The passwords you entered do not match.", "error")
             return redirect(url_for("create_account"))
         #Min. Length of Password
-        if len(password1) < 8:
+        if len(password1) < 4:
             flash("Password should be atleast 8 characters.", "error")
             return redirect(url_for("create_account"))
         # Check if an account has already been created with the same email address
@@ -172,9 +177,9 @@ def create_account():
         msg.html = render_template("confirm.html", confirm_url = link)
         mail.send(msg)
 
-        flash("An email has been sent to you email address. Please Click it to activate your account.")
+        flash("An email has been sent to you email address. Please click it to activate your account.")
         return redirect(url_for('login'))
-
+        
         #For user email confirmation token
         # token = generate_confirmation_token(user.email)
 
@@ -212,12 +217,14 @@ def confirm_email(token):
         flash("The confirmation link is invalid or has expired.", "danger")
     user = User.query.filter_by(email = email).first_or_404()
     if user.confirmed:
-        flash("Your account is successfully confirmed. Please login.")
+        flash("Your account had already been confirmed. Please login.")
     else:
         user.confirmed = True
         user.confirmed_on = datetime.now()
         db.session.add(user)
         db.session.commit()
+        flash("Your account is successfully confirmed. Please enter your Email and Password to login.")
+
     return redirect(url_for("login"))
 
 # def send_email(to, subject, template):
@@ -246,4 +253,4 @@ def post():
 
 if __name__ == "__main__":
     db.create_all()
-    app.run()
+    app.run(debug=False)
