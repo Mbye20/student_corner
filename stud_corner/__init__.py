@@ -7,7 +7,7 @@ from flask_login import UserMixin, login_manager, login_user, LoginManager, logo
 from datetime import timedelta, datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
-from itsdangerous import URLSafeTimedSerializer
+
 from flask_migrate import Migrate
 load_dotenv()
 #create flask app
@@ -15,32 +15,25 @@ def create_app():
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object('config')
-    app.config.from_pyfile('config.py', silent=True)
+    app.config.from_pyfile('config.py')
+    from .views import views
+    from .auth import auth
+    app.register_blueprint(views, auth)
+
 
     return app
     
     
     
 
-#Give a secrete for the session and flashing
-app.secret_key = environ.get("SECRET_KEY")
-#Create a security password for flask_mail
-# SECURITY_PASSWORD_SALT = environ.get("SECURITY_PASSWORD_SALT")
 #Configure session timelimit
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=2)
-####Postgresql Database
-database_uri = environ.get('DATABASE_URL')
-if database_uri.startswith("postgres://"):
-    database_uri = database_uri.replace("postgres://", "postgresql://", 1)
 
 #Configure database
 #### Configure postgresql database to run om server and sqlite to run on local host
 app.config['SQLALCHEMY_DATABASE_URI']=environ.get('SQLITE_DATABASE_URL') or database_uri
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 login_manager = LoginManager()
 login_manager.init_app(app)
