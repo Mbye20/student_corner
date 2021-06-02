@@ -1,14 +1,17 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash, session
-from flask_login import UserMixin, login_manager, login_user, LoginManager, logout_user, current_user
-from flask_login.utils import login_required
-from itsdangerous import URLSafeTimedSerializer
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_user, login_required, logout_user, current_user
 from flask_mail import Mail, Message
-
+from itsdangerous import URLSafeTimedSerializer
+from datetime import datetime
+from .models import User
+from . import db, app, mail
 
 auth = Blueprint('auth', __name__)
 
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
+
 
 #Login Page
 @auth.route("/login", methods = ['GET', 'POST'])
@@ -27,18 +30,12 @@ def login():
             flash("Invalid email or password.", "error")
             return redirect(url_for("login"))
 
-        session.permanent = True
-        #Send Message through gmail to user after log in
-        # msg = Message("Hello %s, " %user.firstname, recipients= [user.email])
-        # msg.body = "You have been Logged in successfully. Cheers!"
-        # mail.send(msg)
-        ### session["email"] = email
         login_user(user, remember= remember)
         if user.confirmed == False:
             flash("Your email had not been confirmed. Please check your inbox to confirm your email address.", "danger")
             return redirect(url_for("login"))
 
-        return redirect(url_for("index"))
+        return redirect(url_for("views.index"))
         
 
     #Return login page if request is get
@@ -50,7 +47,7 @@ def logout():
     #Remove user from session and logout
     logout_user()
     #### session.pop('email', None)
-    return redirect(url_for('index'))
+    return redirect(url_for('views.index'))
 
 
 @auth.route("/create_account", methods = ['POST', 'GET'])
@@ -91,34 +88,11 @@ def create_account():
 
         flash("An email has been sent to you email address. Please click it to activate your account.")
         return redirect(url_for('login'))
-        
-        #For user email confirmation token
-        # token = generate_confirmation_token(user.email)
-
-        # confirm_url = url_for("confirm_email", token = token, _external = True)
-        # html = render_template("confirm.html", confirm_url = confirm_url)
-        # subject = "Email Confirmation"
-
-        # send_email(user.email, subject, html)
-
-        #### print(User.query.order_by(User.username).all())
-        # flash('A confirmation email has been sent via email.', 'success')
-        
-
     
     return render_template("/create_account.html")
 
 
-#### Create token generator function
-# def generate_confirmation_token(email):
-#     return serializer.dumps(email, salt= "activate")
 
-# def confirm_token(token):
-#     try:
-#         email = serializer.loads(token, salt="activate", max_age=7200)
-    
-#     except:
-#         return False
 #     return email
 #### Add a new route to handle the email confirmation
 @auth.route("/confirm/<token>")
@@ -130,7 +104,7 @@ def confirm_email(token):
     user = User.query.filter_by(email = email).first_or_404()
     if user.confirmed and current_user.is_authenticated:
         flash("Your account had already been confirmed.")
-        return redirect(url_for("index"))
+        return redirect(url_for("views.index"))
     elif user.confirmed and not current_user.is_authenticated:
         flash("Your account had already been confirmed. Please login.")
     
@@ -142,13 +116,4 @@ def confirm_email(token):
         flash("Your account is successfully confirmed. Please enter your Email and Password to login.")
 
     return redirect(url_for("login"))
-
-# def send_email(to, subject, template):
-#     msg = Message(
-#         subject,
-#         recipients= [to],
-#         html=template,
-#     )
-#     mail.send(msg)
-
 

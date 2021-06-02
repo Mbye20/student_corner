@@ -1,10 +1,6 @@
-from datetime import datetime
+from . import db
 from flask_login import UserMixin
-from flask_sqlalchemy import SQLAlchemy
-
-
-db = SQLAlchemy()
-
+from datetime import datetime
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
