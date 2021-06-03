@@ -14,6 +14,7 @@ def create_app():
     app = Flask(__name__, instance_relative_config=False)
     # Add app.app_context() tp enable current_app to be used
     with app.app_context():
+        # Do not forget changing to dev config while working locally
         from config import ProductionConfig
         app.config.from_object(ProductionConfig())
 
