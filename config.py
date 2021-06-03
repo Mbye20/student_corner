@@ -6,13 +6,16 @@ load_dotenv()
 
 
 class Config:
-    DEBUG = False
-    SQLALCHEMY_ECHO = False
+    SECRET_KEY = environ.get('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URL')
     if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
         SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    DEBUG = False
+    SQLALCHEMY_ECHO = False
 
     REMEMBER_COOKIE_DURATION = timedelta(days=1)
+    
     ####Configure Email Credential
     MAIL_SERVER='smtp.gmail.com'
     MAIL_PORT = 465

@@ -1,15 +1,15 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
-from flask_mail import Mail, Message
-from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Message
 from datetime import datetime
 from .models import User
-from . import db, app, mail
+from itsdangerous import URLSafeTimedSerializer
+from . import db, mail
+
+serializer = URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
 
 auth = Blueprint('auth', __name__)
-
-serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 
 
@@ -28,12 +28,12 @@ def login():
         # take the user-supplied password, hash it, and compare it to the hashed password in the database
         if not user or not check_password_hash(user.password, password):
             flash("Invalid email or password.", "error")
-            return redirect(url_for("login"))
+            return redirect(url_for("auth.login"))
 
         login_user(user, remember= remember)
         if user.confirmed == False:
             flash("Your email had not been confirmed. Please check your inbox to confirm your email address.", "danger")
-            return redirect(url_for("login"))
+            return redirect(url_for("auth.login"))
 
         return redirect(url_for("views.index"))
         
@@ -62,16 +62,16 @@ def create_account():
         #Confirm if password matches
         if password1 != password2:
             flash("The passwords you entered do not match.", "error")
-            return redirect(url_for("create_account"))
+            return redirect(url_for("auth.create_account"))
         #Min. Length of Password
         if len(password1) < 4:
             flash("Password should be atleast 8 characters.", "error")
-            return redirect(url_for("create_account"))
+            return redirect(url_for("auth.create_account"))
         # Check if an account has already been created with the same email address
         user = User.query.filter_by(email=email).first()
         if user:
             flash("An account has already been created with this email address.", "error")
-            return redirect(url_for("create_account"))
+            return redirect(url_for("auth.create_account"))
 
         new_user = User(firstname= firstname, lastname=lastname, email=email, password = generate_password_hash(password1), admin=False, confirmed=False, confirmed_on= None)
         # if new_user.confirmed == False:
@@ -81,13 +81,13 @@ def create_account():
         db.session.commit()
 
         token = serializer.dumps(email, salt = "confirm")
-        link = url_for("confirm_email", token = token, _external = True)
+        link = url_for("auth.confirm_email", token = token, _external = True)
         msg = Message("Email Confirmation", recipients = [new_user.email])
         msg.html = render_template("confirm.html", confirm_url = link)
         mail.send(msg)
 
         flash("An email has been sent to you email address. Please click it to activate your account.")
-        return redirect(url_for('login'))
+        return redirect(url_for('auth.login'))
     
     return render_template("/create_account.html")
 
@@ -115,5 +115,5 @@ def confirm_email(token):
         db.session.commit()
         flash("Your account is successfully confirmed. Please enter your Email and Password to login.")
 
-    return redirect(url_for("login"))
+    return redirect(url_for("auth.login"))
 

@@ -24,13 +24,13 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         {% if current_user.is_authenticated %}
-                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('post') }}">My Posts</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('views.post') }}">My Posts</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('profile') }}">My Account</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('views.profile') }}">My Account</a></li>
                         {% else %}
-                            <li><a class="dropdown-item" href="{{ url_for('login') }}">Login</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('create_account') }}">Create Account</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.create_account') }}">Create Account</a></li>
                         {% endif %}
                     </ul>
                 </li>

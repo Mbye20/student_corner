@@ -19,6 +19,6 @@ def profile():
 @views.route('/post')
 @login_required
 def post():
-    return render_template(url_for("post"))
+    return render_template("/post.html")
 
 
