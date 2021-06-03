@@ -16,7 +16,7 @@ def create_app():
     # Add app.app_context() tp enable current_app to be used
     with app.app_context():
         app.config.from_object('config')
-        app.config.from_pyfile('config.py')
+        # app.config.from_pyfile('config.py')
         mail.init_app(app)
         db.init_app(app)
 
