@@ -1,4 +1,3 @@
-from instance.config import SECRET_KEY
 from flask import Flask, config
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -12,11 +11,12 @@ db = SQLAlchemy()
 #create flask app
 def create_app():
     # create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__, instance_relative_config=False)
     # Add app.app_context() tp enable current_app to be used
     with app.app_context():
-        app.config.from_object('config.Config')
-        app.config.from_pyfile('config.py')
+        from config import ProductionConfig
+        app.config.from_object(ProductionConfig())
+
         mail.init_app(app)
         db.init_app(app)
 
@@ -38,6 +38,3 @@ def create_app():
 
 
     return app
-    
-    
-    

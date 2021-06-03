@@ -5,17 +5,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-class Config:
+class Config(object):
     SECRET_KEY = environ.get('SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URL')
-    if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
-        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    DEBUG = False
-    SQLALCHEMY_ECHO = False
-
-    REMEMBER_COOKIE_DURATION = timedelta(days=1)
-    
     ####Configure Email Credential
     MAIL_SERVER='smtp.gmail.com'
     MAIL_PORT = 465
@@ -24,3 +15,20 @@ class Config:
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
     MAIL_DEFAULT_SENDER = ("Student Corner Web", environ.get('MAIL_USERNAME'))
+    REMEMBER_COOKIE_DURATION = timedelta(days=1)
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+class DevelopmentConfig(Config):
+    SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URL')
+    SQLALCHEMY_ECHO = True
+    DEBUG = True
+
+
+class ProductionConfig(Config):
+    SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URL')
+    if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
+    DEBUG = False
+    SQLALCHEMY_ECHO = False
+
+    
