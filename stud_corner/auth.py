@@ -102,8 +102,7 @@ def create_account():
 def confirm_email(token):
     email = confirm_token(token)
     if token != generate_confirmation_token(email):
-        flash("The password confirmation link is invalid or has expired.", "danger")
-        return redirect(url_for("auth.login"))
+        return redirect(url_for("auth.error"))
 
     user = User.query.filter_by(email = email).first_or_404()
     if user.confirmed and current_user.is_authenticated:
@@ -141,7 +140,7 @@ def reset_password_request():
         email = request.form.get("email")
         user = User.query.filter_by(email=email).first()
         if user:
-            token = generate_renew_password_token(user.email)
+            token = generate_renew_password_token(email)
             reset_password_url = url_for('auth.reset_password_form', token=token, _external=True)
             html = render_template('renew_password.html', reset_password_url=reset_password_url)
             subject = "Password Renewal Link"
@@ -156,10 +155,6 @@ def reset_password_request():
 @auth.route("/reset_password_form/<token>", methods = ['POST', 'GET'])
 def reset_password_form(token):
     email = confirm_renew_password_token(token)
-    if token != generate_renew_password_token(email):
-        flash("The password renewal link is invalid or has expired. Enter your email address again to receive a new link", "danger")
-        return redirect(url_for("auth.reset_password_request"))
-
     if request.method == 'POST':
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
@@ -177,6 +172,12 @@ def reset_password_form(token):
         flash("Your password is successfully renewed. Please enter your email and new Password to login.", "success")
         return redirect(url_for("auth.login"))
 
-      
-    return render_template("reset_password_form.html")
+    else:  
+        if token != generate_renew_password_token(email):
+            flash("The password renewal link is invalid or has expired. Enter your email address again to receive a new link", "danger")
+            return redirect(url_for("auth.reset_password_request"))
+        return render_template("reset_password_form.html")
     
+@auth.route('/error')
+def error():
+    return render_template("error.html")
