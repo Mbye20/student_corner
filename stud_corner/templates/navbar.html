@@ -11,29 +11,33 @@
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                    <a class="nav-link active" href="#">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" tabindex="-1">Contact</a>
+                    <a class="nav-link active" href="#" tabindex="-1">Contact</a>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item dropdown ">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    User
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        {% if current_user.is_authenticated %}
-                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('views.post') }}">My Posts</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('views.profile') }}">My Account</a></li>
-                        {% else %}
-                            <li><a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('auth.create_account') }}">Create Account</a></li>
-                        {% endif %}
-                    </ul>
-                </li>
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('views.post') }}">My Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('views.profile') }}">My Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('auth.logout') }}">Logout</a>
+                    </li>
+                {% else %}
+
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('auth.login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('auth.create_account') }}">Create Account</a>
+                    </li>
+                {% endif %}
+
             </ul>
             
         </div>

@@ -35,9 +35,14 @@
                                     <strong>{{ message }}</strong> 
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
-                                {% else %}
+                                {% elif category == "success" %}
                                 <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
                                     <strong>{{ message }}</strong> 
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                {% elif category == "unconfirmed_email" %}
+                                <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+                                    {{ message }} <a href="{{ url_for('auth.resend_confirmation') }}">Resend</a>
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                                 {% endif %}
