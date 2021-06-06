@@ -100,24 +100,25 @@ def create_account():
 #### Add a new route to handle the email confirmation
 @auth.route("/confirm/<token>")
 def confirm_email(token):
-    email = confirm_token(token)
-    if token != generate_confirmation_token(email):
+    try:
+        email = confirm_token(token)
+
+        user = User.query.filter_by(email = email).first_or_404()
+        if user.confirmed and current_user.is_authenticated:
+            flash("Your account had already been confirmed.", "success")
+            return redirect(url_for("views.index"))
+        elif user.confirmed and not current_user.is_authenticated:
+            flash("Your account had already been confirmed. Please login.", "success")
+        
+        else:
+            user.confirmed = True
+            user.confirmed_on = datetime.now()
+            db.session.add(user)
+            db.session.commit()
+            flash("Your account is successfully confirmed. Please enter your Email and Password to login.", "success")
+
+    except:
         return redirect(url_for("auth.error"))
-
-    user = User.query.filter_by(email = email).first_or_404()
-    if user.confirmed and current_user.is_authenticated:
-        flash("Your account had already been confirmed.", "success")
-        return redirect(url_for("views.index"))
-    elif user.confirmed and not current_user.is_authenticated:
-        flash("Your account had already been confirmed. Please login.", "success")
-    
-    else:
-        user.confirmed = True
-        user.confirmed_on = datetime.now()
-        db.session.add(user)
-        db.session.commit()
-        flash("Your account is successfully confirmed. Please enter your Email and Password to login.", "success")
-
     return redirect(url_for("auth.login"))
 
 @auth.route('/resend_confirmation')
@@ -154,29 +155,31 @@ def reset_password_request():
 
 @auth.route("/reset_password_form/<token>", methods = ['POST', 'GET'])
 def reset_password_form(token):
-    email = confirm_renew_password_token(token)
     if request.method == 'POST':
-        password1 = request.form.get("password1")
-        password2 = request.form.get("password2")
-        if password1 != password2:
-            flash("The passwords you entered do not match.", "error")
-            return redirect(url_for("auth.reset_password_form", token=token))
-        #Min. Length of Password
-        if len(password1) < 4:
-            flash("Password should be atleast 4 characters.", "error")
-            return redirect(url_for("auth.reset_password_form", token=token))
-        
-        user = User.query.filter_by(email = email).first_or_404()
-        user.password = generate_password_hash(password1)
-        db.session.commit()
-        flash("Your password is successfully renewed. Please enter your email and new Password to login.", "success")
+        try:
+            email = confirm_renew_password_token(token)
+
+            password1 = request.form.get("password1")
+            password2 = request.form.get("password2")
+            if password1 != password2:
+                flash("The passwords you entered do not match.", "error")
+                return redirect(url_for("auth.reset_password_form", token=token))
+            #Min. Length of Password
+            if len(password1) < 4:
+                flash("Password should be atleast 4 characters.", "error")
+                return redirect(url_for("auth.reset_password_form", token=token))
+            
+            user = User.query.filter_by(email = email).first_or_404()
+            user.password = generate_password_hash(password1)
+            db.session.commit()
+            flash("Your password is successfully renewed. Please enter your email and new Password to login.", "success")
+        except:
+            flash("The password renewal link is invalid or has expired. Enter your email address again to receive a new link.", "danger")
+            return redirect(url_for("auth.reset_password_request"))
         return redirect(url_for("auth.login"))
 
-    else:  
-        if token != generate_renew_password_token(email):
-            flash("The password renewal link is invalid or has expired. Enter your email address again to receive a new link", "danger")
-            return redirect(url_for("auth.reset_password_request"))
-        return render_template("reset_password_form.html")
+    return render_template("reset_password_form.html")
+
     
 @auth.route('/error')
 def error():
