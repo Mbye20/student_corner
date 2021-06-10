@@ -32,11 +32,15 @@ def login():
             flash("Forgot your password? ", "password-alert")
             return redirect(url_for("auth.login"))
 
-        login_user(user, remember= remember)
         if not user.confirmed:
-            flash("Your email had not been confirmed. Please check your inbox to confirm your email address and login again. Didn't get the email? ", "unconfirmed_email")
+            flash(
+                "Your email had not been confirmed. Please check your inbox to confirm your email address and login again. Didn't get the email?",
+                "unconfirmed_email"
+                )
+            logout_user()
             return redirect(url_for("auth.login"))
 
+        login_user(user, remember= remember)
         return redirect(url_for("views.index"))
         
 
@@ -75,10 +79,15 @@ def create_account():
             flash("An account has already been created with this email address.", "error")
             return redirect(url_for("auth.create_account"))
 
-        new_user = User(firstname= firstname, lastname=lastname, email=email, password = generate_password_hash(password1), admin=False, confirmed=False, confirmed_on= None)
-        # if new_user.confirmed == False:
-        #     flash("An email has been sent to you email address. Please Click it to confirm your email address.")
-
+        new_user = User(
+            firstname= firstname,
+            lastname=lastname,
+            email=email, password = generate_password_hash(password1),
+            admin=False,
+            confirmed=False,
+            confirmed_on= None
+            )
+        
         db.session.add(new_user)
         db.session.commit()
 
@@ -89,7 +98,10 @@ def create_account():
 
         send_email(new_user.email, subject, html)
 
-        flash("An email has been sent to you email address. Please click it to activate your account.", "success")
+        flash(
+            "An email has been sent to you email address. Please click it to activate your account.",
+            "success"
+            )
         return redirect(url_for('auth.login'))
     
     return render_template("/create_account.html")
@@ -115,22 +127,37 @@ def confirm_email(token):
             user.confirmed_on = datetime.now()
             db.session.add(user)
             db.session.commit()
-            flash("Your account is successfully confirmed. Please enter your Email and Password to login.", "success")
+            flash(
+                "Your account is successfully confirmed. Please enter your Email and Password to login.",
+                "success"
+                )
 
     except:
         return redirect(url_for("auth.error"))
     return redirect(url_for("auth.login"))
 
-@auth.route('/resend_confirmation')
-@login_required
+@auth.route('/resend_confirmation', methods = ['POST', 'GET'])
 def resend_confirmation():
-    token = generate_confirmation_token(current_user.email)
-    confirm_url = url_for('auth.confirm_email', token=token, _external=True)
-    html = render_template('confirm.html', confirm_url=confirm_url)
-    subject = "Email Confirmation"
-    send_email(current_user.email, subject, html)
-    flash('A new confirmation email has been sent.', 'success')
-    return redirect(url_for('auth.login'))
+    if request.method == "POST":
+        email = request.form.get("email")
+        user = User.query.filter_by(email=email).first()
+        if user:
+            # Check if the user is already confirmed
+            if user.confirmed:
+                flash('Your Email address is already confirmed. Please Login.', 'error')
+                return redirect(url_for('auth.login'))
+            token = generate_confirmation_token(email)
+            confirm_url = url_for('auth.confirm_email', token=token, _external=True)
+            html = render_template('confirm.html', confirm_url=confirm_url)
+            subject = "Email Confirmation"
+            send_email(user.email, subject, html)
+            flash('A new confirmation email has been sent.', 'success')
+            return redirect(url_for('auth.login'))
+        else:
+            flash("You entered an invalid email.", "error")
+            return redirect(url_for("auth.resend_confirmation"))
+    return render_template("enter_email.html", title = "Resend Email Confirmation Link")
+
 
 
 
@@ -150,7 +177,7 @@ def reset_password_request():
         else:
             flash("You entered an invalid email.", "error")
 
-    return render_template("reset_password_request.html")
+    return render_template("enter_email.html", title = "Reset Password Request")
 
 
 @auth.route("/reset_password_form/<token>", methods = ['POST', 'GET'])
@@ -172,9 +199,15 @@ def reset_password_form(token):
             user = User.query.filter_by(email = email).first_or_404()
             user.password = generate_password_hash(password1)
             db.session.commit()
-            flash("Your password is successfully renewed. Please enter your email and new Password to login.", "success")
+            flash(
+                "Your password is successfully renewed. Please enter your email and new Password to login.",
+                "success"
+                )
         except:
-            flash("The password renewal link is invalid or has expired. Enter your email address again to receive a new link.", "danger")
+            flash(
+                "The password renewal link is invalid or has expired. Enter your email address again to receive a new link.",
+                "danger"
+                )
             return redirect(url_for("auth.reset_password_request"))
         return redirect(url_for("auth.login"))
 
@@ -184,3 +217,8 @@ def reset_password_form(token):
 @auth.route('/error')
 def error():
     return render_template("error.html")
+
+
+
+
+#yitat54935@flmcat.com	
