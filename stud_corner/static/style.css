@@ -2,3 +2,7 @@ body  {
   background-color: #eee;
   padding-top: 70px;
 }
+
+#floatingTextarea2{
+  height: 200px;
+}

@@ -40,7 +40,7 @@
                         <a class="nav-link {% if active_page=='login' %}active{%endif %}" aria-current="page" href="{{ url_for('auth.login') }}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if active_page=='create_account' %}active{%endif %}" aria-current="page" href="{{ url_for('auth.create_account') }}">Create Account</a>
+                        <a class="nav-link {% if active_page=='signup' %}active{%endif %}" aria-current="page" href="{{ url_for('auth.signup') }}">Create Account</a>
                     </li>
                 {% endif %}
 

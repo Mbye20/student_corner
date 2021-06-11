@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from datetime import datetime
@@ -56,8 +56,8 @@ def logout():
     return redirect(url_for('auth.login'))
 
 
-@auth.route("/create_account", methods = ['POST', 'GET'])
-def create_account():
+@auth.route("/signup", methods = ['POST', 'GET'])
+def signup():
     if request.method == "POST":
         #Get the data entered by the user
         firstname = request.form.get("firstname")
@@ -68,16 +68,16 @@ def create_account():
         #Confirm if password matches
         if password1 != password2:
             flash("The passwords you entered do not match.", "warning")
-            return redirect(url_for("auth.create_account"))
+            return redirect(url_for("auth.signup"))
         #Min. Length of Password
         if len(password1) < 4:
             flash("Password should be atleast 4 characters.", "warning")
-            return redirect(url_for("auth.create_account"))
+            return redirect(url_for("auth.signup"))
         # Check if an account has already been created with the same email address
         user = User.query.filter_by(email=email).first()
         if user:
             flash("An account has already been created with this email address.", "warning")
-            return redirect(url_for("auth.create_account"))
+            return redirect(url_for("auth.signup"))
 
         new_user = User(
             firstname= firstname,
@@ -104,7 +104,7 @@ def create_account():
             )
         return redirect(url_for('auth.login'))
     
-    return render_template("/create_account.html")
+    return render_template("/signup.html")
 
 
 
