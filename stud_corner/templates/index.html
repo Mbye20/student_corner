@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 
+{% set active_page = "index" %}
+
 {% block header %}
+
 {% if current_user.is_authenticated %}
     <h1>{% block title %}Hello Student: {{ current_user.firstname }} {% endblock %}</h1>
 {% else %}

@@ -25,10 +25,10 @@ def login():
         # check if the user actually exists
         # take the user-supplied password, hash it, and compare it to the hashed password in the database
         if not user:
-            flash("You entered an invalid email.", "error")
+            flash("You entered an invalid email.", "warning")
             return redirect(url_for("auth.login"))
         if not check_password_hash(user.password, password):
-            flash("You entered an invalid password.", "error")
+            flash("You entered an invalid password.", "warning")
             flash("Forgot your password? ", "password-alert")
             return redirect(url_for("auth.login"))
 
@@ -67,16 +67,16 @@ def create_account():
         email = request.form.get("email")
         #Confirm if password matches
         if password1 != password2:
-            flash("The passwords you entered do not match.", "error")
+            flash("The passwords you entered do not match.", "warning")
             return redirect(url_for("auth.create_account"))
         #Min. Length of Password
         if len(password1) < 4:
-            flash("Password should be atleast 4 characters.", "error")
+            flash("Password should be atleast 4 characters.", "warning")
             return redirect(url_for("auth.create_account"))
         # Check if an account has already been created with the same email address
         user = User.query.filter_by(email=email).first()
         if user:
-            flash("An account has already been created with this email address.", "error")
+            flash("An account has already been created with this email address.", "warning")
             return redirect(url_for("auth.create_account"))
 
         new_user = User(
@@ -144,7 +144,7 @@ def resend_confirmation():
         if user:
             # Check if the user is already confirmed
             if user.confirmed:
-                flash('Your Email address is already confirmed. Please Login.', 'error')
+                flash('Your Email address is already confirmed. Please Login.', 'warning')
                 return redirect(url_for('auth.login'))
             token = generate_confirmation_token(email)
             confirm_url = url_for('auth.confirm_email', token=token, _external=True)
@@ -154,7 +154,7 @@ def resend_confirmation():
             flash('A new confirmation email has been sent.', 'success')
             return redirect(url_for('auth.login'))
         else:
-            flash("You entered an invalid email.", "error")
+            flash("You entered an invalid email.", "warning")
             return redirect(url_for("auth.resend_confirmation"))
     return render_template("enter_email.html", title = "Resend Email Confirmation Link")
 
@@ -175,7 +175,7 @@ def reset_password_request():
             send_email(user.email, subject, html)
             flash("An email with a link to renew your password has been sent to your email address.", "success")
         else:
-            flash("You entered an invalid email.", "error")
+            flash("You entered an invalid email.", "warning")
 
     return render_template("enter_email.html", title = "Reset Password Request")
 
@@ -189,11 +189,11 @@ def reset_password_form(token):
             password1 = request.form.get("password1")
             password2 = request.form.get("password2")
             if password1 != password2:
-                flash("The passwords you entered do not match.", "error")
+                flash("The passwords you entered do not match.", "warning")
                 return redirect(url_for("auth.reset_password_form", token=token))
             #Min. Length of Password
             if len(password1) < 4:
-                flash("Password should be atleast 4 characters.", "error")
+                flash("Password should be atleast 4 characters.", "warning")
                 return redirect(url_for("auth.reset_password_form", token=token))
             
             user = User.query.filter_by(email = email).first_or_404()
