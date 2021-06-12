@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     admin = db.Column(db.Boolean, nullable=False, default=False)
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
     confirmed_on = db.Column(db.DateTime, nullable=True)
-    bio = db.Column(db.Text)
+    bio = db.Column(db.Text, nullable=True)
     posts = db.relationship('Posts', backref='author', lazy=True)
 
 
