@@ -18,7 +18,6 @@ class User(UserMixin, db.Model):
 
 
 
-
 class Posts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     subject = db.Column(db.String(100))
