@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="container col-md-6 bg-white border">
+<div class="container col-md-8 rounded shadow bg-white border">
     <form method="POST">
         <h1 class="h3 fw-normal my-3">New Post</h1>
         <hr>
@@ -25,9 +25,30 @@
         </div>
     </form>
 </div>
-
+<br>
+<div class="container col-md-8">
+    <div class="row justify-content-center">
+        <h3>Previous Posts </h3>
+    </div>
+</div>
+{% for post in current_user_posts %}
+<div class="container col-md-8 bg-white rounded shadow border mb-3">
+    <div class="row justify-content-center">
+        <article class="blog-post by-3">
+            <h5 class="blog-post-title">{{ post.title }}</h5>
+            <h6 class="blog-post-title">{{ post.subject }}</h6>
+            <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} </p>
+            <hr>
+            {% if post.content |length > 400 %}
+                <p>{{ post.content |truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}">read more</a></p>
+                {% else %}
+                <p>{{ post.content }}</p>
+            {% endif %}
+        </article>
+    </div>
+</div>
+{% endfor %}
 
 {% endblock %}
 
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio, distinctio.

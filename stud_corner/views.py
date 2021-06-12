@@ -59,13 +59,18 @@ def post():
         db.session.commit()
 
         flash("Your post is successfully created.", "success")
-        return redirect(url_for("views.index"))
-
-    return render_template("/post.html")
+        return redirect(url_for("views.post"))
+    current_user_posts = Posts.query.filter_by(user_id = current_user.id).order_by(Posts.date_posted.desc()).all()
+    return render_template("/post.html", current_user_posts = current_user_posts)
 
 @views.route('/author/<int:id>')
 def author(id):
     post = Posts.query.get_or_404(id)
     author = post.author
-    author_posts = author.posts
+    author_posts = Posts.query.filter_by(user_id = author.id).order_by(Posts.date_posted.desc()).all()
     return render_template("/author.html", author = author, author_posts = author_posts)
+
+@views.route('/read_more/<int:id>')
+def read_more(id):
+    post = Posts.query.get_or_404(id)
+    return render_template("/read_more.html", post = post)
