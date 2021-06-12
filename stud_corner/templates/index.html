@@ -2,28 +2,41 @@
 
 {% set active_page = "index" %}
 
-{% block header %}
-
+{% block title %}
 {% if current_user.is_authenticated %}
-<div class="d-flex justify-content-center">   
-    <h1>{% block title %}Welcome {{ current_user.firstname }} {{ current_user.lastname }}! {% endblock %}</h1>
-</div>
+    Welcome {{ current_user.firstname }} {{ current_user.lastname }}!
 {% else %}
-<div class="d-flex justify-content-center">   
-    <h1>Hello Student</h1>
-</div>
+    Hello Student!{% endif %}
+{% endblock %}
+
+{% block header %}
+{% if current_user.is_authenticated %}
+
+    <div class="d-flex justify-content-center">   
+        <h1>Welcome {{ current_user.firstname }} {{ current_user.lastname }}!</h1>
+    </div>
+{% else %}
+    <div class="d-flex justify-content-center">   
+        <h1>Hello Student</h1>
+    </div>
 {% endif %}
 {% endblock %}
 
 
+
+
 {% block content %}
-<div class="container col-md-10 bg-white border">
-    <div class="row justify-content-center">
-        <article class="blog-post">
-            <h2 class="blog-post-title">Sample blog post</h2>
-            <p class="blog-post-meta">January 1, 2021 by <a href="#">Mark</a></p>
-            <p>This blog post shows a few different types of content that’s supported and styled with Bootstrap. Basic typography, lists, tables, images, code, and more are all supported as expected.</p>
-        </article>
+{% for post in posts %}
+    <div class="container col-md-10 bg-white border my-3">
+        <div class="row justify-content-center">
+            <article class="blog-post">
+                <h2 class="blog-post-title">{{ post.title }}</h2>
+                <h4 class="blog-post-title">{{ post.subject }}</h4>
+                <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} by <a href="{{ url_for('views.author', id = post.id) }}">{{ post.author.firstname }} {{post.author.lastname }}</a></p>
+                <hr>
+                <p>{{ post.content }}</p>
+            </article>
+        </div>
     </div>
-</div>
+{% endfor %}
 {% endblock %}

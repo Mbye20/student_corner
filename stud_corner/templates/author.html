@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %} {{author.firstname}} {{author.lastname}} {% endblock %}
+
+{% block header %}
+<div class="container col-md-10 bg-white border">
+    <div class="row justify-content-start"> 
+        <h5>{{author.firstname}} {{author.lastname}}</h5>
+        <p> {{author.bio}} </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<br>
+<div class="container col-md-10">
+    <div class="row justify-content-center">
+        <h3>Post Made By {{author.firstname}} </h3>
+    </div>
+</div>
+    {% for post in author_posts %}
+    <div class="container col-md-10 bg-white border mb-3">
+        <div class="row justify-content-center">
+            <article class="blog-post by-3">
+                <h5 class="blog-post-title">{{ post.title }}</h5>
+                <h6 class="blog-post-title">{{ post.subject }}</h6>
+                <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} </p>
+                <hr>
+                <p>{{ post.content }}</p>
+            </article>
+        </div>
+    </div>
+    {% endfor %}
+    
+{% endblock %}
+
+

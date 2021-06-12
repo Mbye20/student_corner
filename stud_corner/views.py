@@ -6,7 +6,7 @@ from flask import Blueprint, request, render_template, url_for
 from flask_login import current_user
 from flask_login.utils import login_required
 from . import db
-from .models import Posts
+from .models import Posts, User
 
 
 views = Blueprint('views', __name__)
@@ -15,7 +15,9 @@ views = Blueprint('views', __name__)
 #Main page
 @views.route('/')
 def index():
-    return render_template("/index.html")
+    posts = Posts.query.order_by(Posts.date_posted.desc()).all()
+    return render_template("/index.html", posts = posts)
+        
 
 
 @views.route('/profile', methods = ['GET', 'POST'])
@@ -61,4 +63,9 @@ def post():
 
     return render_template("/post.html")
 
-
+@views.route('/author/<int:id>')
+def author(id):
+    post = Posts.query.get_or_404(id)
+    author = post.author
+    author_posts = author.posts
+    return render_template("/author.html", author = author, author_posts = author_posts)
