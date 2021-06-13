@@ -11,12 +11,12 @@
 
 {% block header %}
 {% if current_user.is_authenticated %}
-
-    <div class="d-flex justify-content-center">   
+    <div class="d-flex justify-content-center text-white h-background-c col-12">   
         <h1>Welcome {{ current_user.firstname }} {{ current_user.lastname }}!</h1>
     </div>
+
 {% else %}
-    <div class="d-flex justify-content-center">   
+    <div class="d-flex justify-content-center text-white h-background-c col-12">   
         <h1>Hello Student</h1>
     </div>
 {% endif %}
@@ -30,12 +30,12 @@
     <div class="container col-md-8 bg-white border rounded shadow my-3">
         <div class="row justify-content-center">
             <article class="blog-post">
-                <h2 class="blog-post-title">{{ post.title }}</h2>
+                <h2 class="blog-post-title"><a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none link-dark">{{ post.title }}</a></h2>
                 <h4 class="blog-post-title">{{ post.subject }}</h4>
-                <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} by <a href="{{ url_for('views.author', id = post.id) }}">{{ post.author.firstname }} {{post.author.lastname }}</a></p>
+                <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} by <a href="{{ url_for('views.author', id = post.author.id) }}" class="text-decoration-none link-dark">{{ post.author.firstname }} {{post.author.lastname }}</a></p>
                 <hr>
                 {% if post.content |length > 400 %}
-                <p>{{ post.content |truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}">read more</a></p>
+                <p>{{ post.content |truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
                 {% else %}
                 <p>{{ post.content }}</p>
                 {% endif %}                

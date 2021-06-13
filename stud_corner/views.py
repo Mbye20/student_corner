@@ -65,8 +65,7 @@ def post():
 
 @views.route('/author/<int:id>')
 def author(id):
-    post = Posts.query.get_or_404(id)
-    author = post.author
+    author = User.query.get_or_404(id)
     author_posts = Posts.query.filter_by(user_id = author.id).order_by(Posts.date_posted.desc()).all()
     return render_template("/author.html", author = author, author_posts = author_posts)
 
@@ -74,3 +73,32 @@ def author(id):
 def read_more(id):
     post = Posts.query.get_or_404(id)
     return render_template("/read_more.html", post = post)
+
+@views.route('/update_post/<int:id>', methods = ['GET', 'POST'])
+@login_required
+def update_post(id):
+    to_update_post = Posts.query.get_or_404(id)
+    if request.method == "POST":
+        subject = request.form.get("subject")
+        title = request.form.get("title")
+        content = request.form.get("content")
+
+        to_update_post.subject = subject
+        to_update_post.title = title
+        to_update_post.content = content
+        db.session.commit()
+        flash("Post updated successfully.", "success")
+        return redirect(url_for("views.post"))
+
+    return render_template("/update_post.html", to_update_post = to_update_post)
+
+    
+
+@views.route('/delete_post/<int:id>')
+@login_required
+def delete_post(id):
+    to_del_post = Posts.query.get_or_404(id)
+    db.session.delete(to_del_post)
+    db.session.commit()
+    flash("Post deleted successfully.", "success")
+    return redirect(url_for("views.post"))
