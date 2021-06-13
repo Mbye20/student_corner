@@ -5,21 +5,21 @@
 
 
 {% block content %}
-<div class="container col-md-5 rounded shadow bg-white border">
+<div class="container col-md-5 mt-4 rounded shadow bg-white border">
     <div class="row justify-content-center">
-        <form class="col-md-11" method="POST">
-            <h1 class="h3 fw-normal my-3">Sign Up</h1>
+        <form class="col-md-12 p-4" method="POST">
+            <h1 class="h3 fw-normal">Sign Up</h1>
             <hr>
             <div class="form-floating my-3">
                 <input type="text" name="firstname" class="form-control" id="floatingInput" placeholder="First Name" autocomplete="off" autofocus required>
                 <label for="floatingInput">First Name</label>
             </div>
-            <div class="form-floating my-3">
+            <div class="form-floating mb-3">
                 <input type="text" name="lastname" class="form-control" id="floatinglastname" placeholder="Last Name" autocomplete="off" autofocus required>
                 <label for="floatinglastname">Last Name</label>
             </div>
 
-            <div class="form-floating my-3">
+            <div class="form-floating mb-3">
             <input type="email" name="email" class="form-control" id="floatingemail" placeholder="Email Address" value="user@example.com" autocomplete="off" autofocus required>
             <label for="floatingemail">Email Address</label>
             </div>
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center">
-                <button class="w-30 btn btn-lg btn-primary mb-3" type="submit">Create Account</button>
+                <button class="w-30 btn btn-lg btn-primary" type="submit">Create Account</button>
             </div>
         </form>
     </div>

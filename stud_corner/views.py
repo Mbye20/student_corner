@@ -1,8 +1,5 @@
-from operator import pos
-from flask.helpers import flash
-from werkzeug.utils import redirect
-from stud_corner import email
-from flask import Blueprint, request, render_template, url_for
+from flask import abort
+from flask import Blueprint, request, render_template, url_for, flash, redirect
 from flask_login import current_user
 from flask_login.utils import login_required
 from . import db
@@ -93,12 +90,15 @@ def update_post(id):
     return render_template("/update_post.html", to_update_post = to_update_post)
 
     
-
 @views.route('/delete_post/<int:id>')
 @login_required
 def delete_post(id):
     to_del_post = Posts.query.get_or_404(id)
+    if to_del_post.author != current_user:
+        abort(403)
     db.session.delete(to_del_post)
     db.session.commit()
     flash("Post deleted successfully.", "success")
     return redirect(url_for("views.post"))
+
+
