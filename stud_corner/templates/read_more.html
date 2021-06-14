@@ -14,7 +14,7 @@
                 <h6 class="blog-post-title">{{ post.subject }}</h6>
                 <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} </p>
                 <hr>
-                <p>{{ post.content }}</p>
+                <p>{{ post.content.replace("\n", "</br>") |safe }}</p>
             </article>
         </div>
     </div>

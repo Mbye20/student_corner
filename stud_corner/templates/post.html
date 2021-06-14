@@ -42,9 +42,9 @@
                     <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} </p>
                     <hr>
                     {% if post.content |length > 400 %}
-                        <p>{{ post.content |truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
+                        <p>{{ post.content.replace("\n", "</br>") |truncate(400) |safe }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
                         {% else %}
-                        <p>{{ post.content }}</p>
+                        <p>{{ post.content.replace("\n", "</br>")|safe }}</p>
                     {% endif %}
                     <!-- Button trigger modal -->
                     <div class="d-flex justify-content-end">   

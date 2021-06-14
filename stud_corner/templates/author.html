@@ -8,7 +8,7 @@
     <div class="container col-md-7 mt-3 rounded shadow bg-white border">
         <div class="row justify-content-center"> 
             <h5>{{author.firstname}} {{author.lastname}}</h5>
-            <p> {{author.bio}} </p>
+            <p> {{ author.bio.replace("\n", "</br>")|safe }} </p>
         </div>
     </div>
 {% endif %}
@@ -29,9 +29,9 @@
                 <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} </p>
                 <hr>
                 {% if post.content |length > 400 %}
-                <p>{{ post.content |truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}">read more</a></p>
+                <p>{{ post.content.replace("\n", "</br>")|safe |truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}">read more</a></p>
                 {% else %}
-                <p>{{ post.content }}</p>
+                <p>{{ post.content.replace("\n", "</br>")|safe }}</p>
                 {% endif %}
             </article>
         </div>
