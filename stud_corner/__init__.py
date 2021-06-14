@@ -17,8 +17,8 @@ def create_app():
     # Add app.app_context() tp enable current_app to be used
     with app.app_context():
         # Do not forget changing to dev config while working locally
-        from config import ProductionConfig
-        app.config.from_object(ProductionConfig())
+        from config import DevelopmentConfig
+        app.config.from_object(DevelopmentConfig())
 
         mail.init_app(app)
         db.init_app(app)

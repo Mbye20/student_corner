@@ -10,11 +10,11 @@
     <div class="container col-md-7 bg-white rounded shadow border mb-3">
         <div class="row justify-content-center">
             <article class="blog-post by-3">
-                <h5 class="blog-post-title">{{ post.title }}</h5>
-                <h6 class="blog-post-title">{{ post.subject }}</h6>
+                <h5 class="blog-post-title">{{ post.title |e|title }}</h5>
+                <h6 class="blog-post-title">{{ post.subject |e |safe |title }}</h6>
                 <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} </p>
                 <hr>
-                <p>{{ post.content.replace("\n", "</br>") |safe }}</p>
+                <p>{{ post.content|replace("\n", "</br>") |safe |urlize}}</p>
             </article>
         </div>
     </div>

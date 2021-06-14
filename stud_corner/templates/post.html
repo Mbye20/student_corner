@@ -37,12 +37,12 @@
         <div class="container col-md-6 bg-white rounded shadow border mb-3">
             <div class="row justify-content-center">
                 <article class="blog-post by-3">
-                    <h5 class="blog-post-title">{{ post.title }}</h5>
-                    <h6 class="blog-post-title">{{ post.subject }}</h6>
+                    <h5 class="blog-post-title">{{ post.title |e |title  }}</h5>
+                    <h6 class="blog-post-title">{{ post.subject|e |title }}</h6>
                     <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} </p>
                     <hr>
-                    {% if post.content |length > 400 %}
-                        <p>{{ post.content.replace("\n", "</br>") |truncate(400) |safe }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
+                    {% if post.content |wordcount > 50 %}
+                        <p>{{ post.content|e |wordwrap(width=100, break_long_words=False) |truncate(400) |safe }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
                         {% else %}
                         <p>{{ post.content.replace("\n", "</br>")|safe }}</p>
                     {% endif %}

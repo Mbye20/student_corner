@@ -34,13 +34,15 @@
                 <h4 class="blog-post-title">{{ post.subject }}</h4>
                 <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} by <a href="{{ url_for('views.author', id = post.author.id) }}" class="text-decoration-none link-dark">{{ post.author.firstname }} {{post.author.lastname }}</a></p>
                 <hr>
-                {% if post.content |length > 400 %}
-                <p>{{ post.content.replace("\n", "</br>")|safe |truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
+                {% if post.content |wordcount > 50 %}
+                <p>{{ post.content |replace("\n", "</br>") |safe |urlize|truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
                 {% else %}
-                <p>{{ post.content.replace("\n", "</br>")|safe }}</p>
+                <p>{{ post.content |replace("\n", "</br>") |safe |urlize }}</p>
                 {% endif %}                
             </article>
         </div>
     </div>
 {% endfor %}
 {% endblock %}
+
+
