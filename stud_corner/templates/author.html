@@ -7,7 +7,7 @@
 {% if author.bio %}
     <div class="container col-md-7 mt-3 rounded shadow bg-white border">
         <div class="row justify-content-center"> 
-            <h5>{{author.firstname}} {{author.lastname}}</h5>
+            <h5>{{ ("%s %s"%(author.firstname, author.lastname))|title }}</h5>
             <p> {{ author.bio.replace("\n", "</br>")|safe }} </p>
         </div>
     </div>
@@ -17,7 +17,7 @@
 <br>
 <div class="container col-md-7">
     <div class="row justify-content-center">
-        <h3>Posts Made By {{author.firstname}} </h3>
+        <h3>{{ ("Posts Made By %s %s" %(author.firstname, author.lastname))|title}}</h3>
     </div>
 </div>
     {% for post in author_posts %}
@@ -26,12 +26,12 @@
             <article class="blog-post by-3">
                 <h5 class="blog-post-title">{{ post.title }}</h5>
                 <h6 class="blog-post-title">{{ post.subject }}</h6>
-                <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} </p>
+                <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }}</p>
                 <hr>
-                {% if post.content |length > 400 %}
-                <p>{{ post.content.replace("\n", "</br>")|safe |truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}">read more</a></p>
+                {% if post.content |wordcount > 50 %}
+                <p>{{ post.content |replace("\n", "</br>") |safe |urlize|truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
                 {% else %}
-                <p>{{ post.content.replace("\n", "</br>")|safe }}</p>
+                <p>{{ post.content |replace("\n", "</br>") |safe |urlize }}</p>
                 {% endif %}
             </article>
         </div>
