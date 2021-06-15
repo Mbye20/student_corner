@@ -2,8 +2,8 @@
 
 {% set active_page = "post" %}
 
-{% block content %}
 
+{% block content %}
 <div class="container col-md-6 mt-3 rounded shadow bg-white border">
     <form method="POST">
         <h1 class="h3 fw-normal my-3">New Post</h1>
@@ -37,40 +37,40 @@
         <div class="container col-md-6 bg-white rounded shadow border mb-3">
             <div class="row justify-content-center">
                 <article class="blog-post by-3">
-                    <h5 class="blog-post-title">{{ post.title |e |title  }}</h5>
-                    <h6 class="blog-post-title">{{ post.subject|e |title }}</h6>
+                    <h5 class="blog-post-title">{{ post.title |title  }}</h5>
+                    <h6 class="blog-post-title">{{ post.subject |title }}</h6>
                     <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} </p>
                     <hr>
                     {% if post.content |wordcount > 50 %}
-                        <p>{{ post.content|e |wordwrap(width=100, break_long_words=False) |truncate(400) |safe }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
+                        <p>{{ post.content|e |truncate(400) |safe |urlize }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
                         {% else %}
-                        <p>{{ post.content.replace("\n", "</br>")|safe }}</p>
+                        <p>{{ post.content |replace("\n", "</br>")|safe |urlize}}</p>
                     {% endif %}
-                    <!-- Button trigger modal -->
-                    <div class="d-flex justify-content-end">   
-                        <span><button type="button" class="w-30 btn btn-sm btn-success mx-3 mb-3"><a href="{{ url_for('views.update_post', id = post.id) }}" class="text-decoration-none link-light">Update</a></button></span>
-                        <span><button type="button" class="w-30 btn btn-sm btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#deleteModal{{ post.id }}">
-                            Delete</button></span>
-                    </div>
-                    <!-- Modal -->
-                    <div class="modal fade" id="deleteModal{{ post.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteModalLabel">Deleting this post!</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    Are you sure you want to delete this post?
-                                  </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-danger"><a href="{{ url_for('views.delete_post', id = post.id) }}" class="text-decoration-none link-light">Delete</a></button>
-                                </div>
+                </article>
+                <!-- Button trigger modal -->
+                <div class="d-flex justify-content-end">   
+                    <span><button type="button" class="w-30 btn btn-sm btn-success mx-3 mb-3"><a href="{{ url_for('views.update_post', id = post.id) }}" class="text-decoration-none link-light">Update</a></button></span>
+                    <span><button type="button" class="w-30 btn btn-sm btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#deleteModal{{ post.id }}">
+                        Delete</button></span>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal{{ post.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">Deleting this post!</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete this post?
+                              </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger"><a href="{{ url_for('views.delete_post', id = post.id) }}" class="text-decoration-none link-light">Delete</a></button>
                             </div>
                         </div>
                     </div>
-                </article>
+                </div>
             </div>
         </div>
 

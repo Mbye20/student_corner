@@ -2,19 +2,11 @@
 
 {% set active_page = "index" %}
 
-{% block title %}
-{% if current_user.is_authenticated %}
-    Welcome {{ current_user.firstname }} {{ current_user.lastname }}!
-{% else %}
-    Hello Student!{% endif %}
-{% endblock %}
-
 {% block header %}
 {% if current_user.is_authenticated %}
     <div class="d-flex justify-content-center text-white h-background-c col-12">   
-        <h1>Welcome {{ current_user.firstname }} {{ current_user.lastname }}!</h1>
+        <h1> {% block title %}{{ "Welcome %s %s!"%(current_user.firstname, current_user.lastname) }}{% endblock title %}</h1>
     </div>
-
 {% else %}
     <div class="d-flex justify-content-center text-white h-background-c col-12">   
         <h1>Hello Student</h1>
@@ -22,17 +14,14 @@
 {% endif %}
 {% endblock %}
 
-
-
-
 {% block content %}
 {% for post in posts %}
     <div class="container col-md-7 bg-white border rounded shadow my-3">
         <div class="row justify-content-center">
             <article class="blog-post">
-                <h2 class="blog-post-title"><a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none link-dark">{{ post.title }}</a></h2>
+                <h3 class="blog-post-title"><a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none link-dark">{{ post.title |title }}</a></h3>
                 <h4 class="blog-post-title">{{ post.subject }}</h4>
-                <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} by <a href="{{ url_for('views.author', id = post.author.id) }}" class="text-decoration-none link-dark">{{ post.author.firstname }} {{post.author.lastname }}</a></p>
+                <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} by <a href="{{ url_for('views.author', id = post.author.id) }}" class="text-decoration-none link-dark">{{ ("%s %s" %(post.author.firstname, post.author.lastname))|title }}</a></p>
                 <hr>
                 {% if post.content |wordcount > 50 %}
                 <p>{{ post.content |replace("\n", "</br>") |safe |urlize|truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>

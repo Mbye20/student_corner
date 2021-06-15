@@ -4,14 +4,14 @@
 {% block content %}
 <div class="container col-md-7 mt-3">
     <div class="row justify-content-center">
-        <h3>Posted By {{ post.author.firstname }} </h3>
+        <h3>{{ "Posted By %s %s" %(post.author.firstname, post.author.lastname)}}</h3>
     </div>
 </div>
     <div class="container col-md-7 bg-white rounded shadow border mb-3">
         <div class="row justify-content-center">
             <article class="blog-post by-3">
-                <h5 class="blog-post-title">{{ post.title |e|title }}</h5>
-                <h6 class="blog-post-title">{{ post.subject |e |safe |title }}</h6>
+                <h5 class="blog-post-title">{{ post.title |title }}</h5>
+                <h6 class="blog-post-title">{{ post.subject |title }}</h6>
                 <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} </p>
                 <hr>
                 <p>{{ post.content|replace("\n", "</br>") |safe |urlize}}</p>
