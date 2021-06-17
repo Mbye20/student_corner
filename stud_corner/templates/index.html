@@ -3,10 +3,18 @@
 
 {% set active_page = "index" %}
 
+{% block title %}
+{% if current_user.is_authenticated %}
+    {{ "Welcome %s %s!"%(current_user.firstname, current_user.lastname) }}
+{% else %}
+    Student Corner
+{% endif %}
+{% endblock title %}
+
 {% block header %}
 {% if current_user.is_authenticated %}
     <div class="d-flex justify-content-center text-white h-background-c col-12">   
-        <h1> {% block title %}{{ "Welcome %s %s!"%(current_user.firstname, current_user.lastname) }}{% endblock title %}</h1>
+        <h1> {{ "Welcome %s %s!"%(current_user.firstname, current_user.lastname) }}</h1>
     </div>
 {% else %}
     <div class="d-flex justify-content-center text-white h-background-c col-12">   

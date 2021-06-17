@@ -7,8 +7,8 @@
 {% if author.bio %}
     <div class="container col-md-7 mt-3 rounded shadow bg-white border">
         <div class="row justify-content-center"> 
-            <h5>{{ ("%s %s"%(author.firstname, author.lastname))|title }}</h5>
-            <p class="bio"> {{ author}} </p>
+            <h5>{{ ("%s %s" %(author.firstname, author.lastname))|title }}</h5>
+            <p class="bio">{{ author.bio }}</p>
         </div>
     </div>
 {% endif %}
