@@ -12,8 +12,10 @@ views = Blueprint('views', __name__)
 #Main page
 @views.route('/')
 def index():
-    posts = Posts.query.order_by(Posts.date_posted.desc()).all()
-    return render_template("/index.html", posts = posts)
+    page = request.args.get("page", 1, int)
+    pag_posts = (Posts.query.order_by(Posts.date_posted
+    .desc()).paginate(page = page, per_page = 2))
+    return render_template("/index.html", pag_posts = pag_posts)
         
 
 
@@ -41,6 +43,7 @@ def profile():
 @views.route('/post', methods = ['GET', 'POST'])
 @login_required
 def post():
+    page = request.args.get("page", 1, int)
     if request.method == "POST":
         subject = request.form.get("subject")
         title = request.form.get("title")
@@ -57,13 +60,20 @@ def post():
 
         flash("Your post is successfully created.", "success")
         return redirect(url_for("views.post"))
-    current_user_posts = Posts.query.filter_by(user_id = current_user.id).order_by(Posts.date_posted.desc()).all()
+    
+    current_user_posts = (Posts.query.filter_by(user_id = current_user.id)
+    .order_by(Posts.date_posted.desc())
+    .paginate(page = page, per_page = 2))
+
     return render_template("/post.html", current_user_posts = current_user_posts)
 
 @views.route('/author/<int:id>')
 def author(id):
+    page = request.args.get("page", 1, int)
     author = User.query.get_or_404(id)
-    author_posts = Posts.query.filter_by(user_id = author.id).order_by(Posts.date_posted.desc()).all()
+    author_posts = (Posts.query.filter_by(user_id = author.id)
+    .order_by(Posts.date_posted.desc())
+    .paginate(page = page, per_page = 2))
     return render_template("/author.html", author = author, author_posts = author_posts)
 
 @views.route('/read_more/<int:id>')

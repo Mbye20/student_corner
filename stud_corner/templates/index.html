@@ -1,3 +1,4 @@
+{% from "pagination.html" import render_pagination with context %}
 {% extends "layout.html" %}
 
 {% set active_page = "index" %}
@@ -15,7 +16,7 @@
 {% endblock %}
 
 {% block content %}
-{% for post in posts %}
+{% for post in pag_posts.items %}
     <div class="container col-md-7 bg-white border rounded shadow my-3">
         <div class="row justify-content-center">
             <article class="blog-post">
@@ -32,6 +33,10 @@
         </div>
     </div>
 {% endfor %}
+
+{{render_pagination(pag_posts, "views.index", name = "pagination for index page" )}}
+
+
 {% endblock %}
 
 

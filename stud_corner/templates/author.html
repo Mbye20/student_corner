@@ -1,3 +1,4 @@
+{% from "pagination.html" import render_pagination with context %}
 {% extends "layout.html" %}
 
 {% block title %} {{author.firstname}} {{author.lastname}} {% endblock %}
@@ -20,7 +21,7 @@
         <h3>{{ ("Posts Made By %s %s" %(author.firstname, author.lastname))|title}}</h3>
     </div>
 </div>
-    {% for post in author_posts %}
+    {% for post in author_posts.items %}
     <div class="container col-md-7 bg-white rounded shadow border mb-3">
         <div class="row justify-content-center">
             <article class="blog-post by-3">
@@ -38,6 +39,8 @@
     </div>
     {% endfor %}
     
+{{render_pagination(author_posts, "views.post", name = "pagination for author's posts page" )}}
+
 {% endblock %}
 
 

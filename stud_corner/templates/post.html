@@ -1,3 +1,4 @@
+{% from "pagination.html" import render_pagination with context %}
 {% extends "layout.html" %}
 
 {% set active_page = "post" %}
@@ -33,7 +34,7 @@
             <h3>Previous Posts </h3>
         </div>
     </div>
-    {% for post in current_user_posts %}
+    {% for post in current_user_posts.items %}
         <div class="container col-md-6 bg-white rounded shadow border mb-3">
             <div class="row justify-content-center">
                 <article class="blog-post by-3">
@@ -76,6 +77,8 @@
 
     {% endfor %}
 {% endif %}
+
+{{render_pagination(current_user_posts, "views.post", name = "pagination for post page" )}}
 
 {% endblock %}
 

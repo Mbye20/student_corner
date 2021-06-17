@@ -14,7 +14,7 @@
                 <h6 class="blog-post-title">{{ post.subject |title }}</h6>
                 <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} </p>
                 <hr>
-                <p>{{ post.content|replace("\n", "</br>") |safe |urlize}}</p>
+                <p>{{ post.content|tojson |urlize}}</p>
             </article>
         </div>
     </div>
