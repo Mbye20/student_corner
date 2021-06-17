@@ -1,4 +1,3 @@
-{% from "pagination.html" import render_pagination with context %}
 {% extends "layout.html" %}
 
 {% block title %} {{author.firstname}} {{author.lastname}} {% endblock %}
@@ -9,7 +8,7 @@
     <div class="container col-md-7 mt-3 rounded shadow bg-white border">
         <div class="row justify-content-center"> 
             <h5>{{ ("%s %s"%(author.firstname, author.lastname))|title }}</h5>
-            <p> {{ author.bio.replace("\n", "</br>")|safe }} </p>
+            <p class="bio"> {{ author}} </p>
         </div>
     </div>
 {% endif %}
@@ -18,7 +17,7 @@
 <br>
 <div class="container col-md-7">
     <div class="row justify-content-center">
-        <h3>{{ ("Posts Made By %s %s" %(author.firstname, author.lastname))|title}}</h3>
+        <h3>{{ ("By %s %s" %(author.firstname, author.lastname))|title}}</h3>
     </div>
 </div>
     {% for post in author_posts.items %}
@@ -30,16 +29,38 @@
                 <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }}</p>
                 <hr>
                 {% if post.content |wordcount > 50 %}
-                <p>{{ post.content |replace("\n", "</br>") |safe |urlize|truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
+                <p class="content">{{ post.content |urlize|truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
                 {% else %}
-                <p>{{ post.content |replace("\n", "</br>") |safe |urlize }}</p>
+                <p class="content">{{ post.content |urlize }}</p>
                 {% endif %}
             </article>
         </div>
     </div>
     {% endfor %}
     
-{{render_pagination(author_posts, "views.post", name = "pagination for author's posts page" )}}
+<nav aria-label="pagination for author's posts">
+    <ul class="pagination justify-content-center mt-5">
+        <li class="page-item {% if not author_posts.has_prev %} disabled {% endif %} ">
+            <a class="page-link" href="{{ url_for('views.author', id=author.id, page=author_posts.prev_num) }}">Previous</a>
+        </li>
+        {%- for page in author_posts.iter_pages(left_edge=2, left_current=1, right_current=2, right_edge=2) %}
+            {% if page %}
+                {% if page != author_posts.page %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('views.author', id=author.id, page=page) }}"> {{ page }} </a></li>
+                {% else %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link"> {{ page }} </span>
+                    </li>
+                {% endif %}
+            {% else %}
+                <span>…</span>
+            {% endif %}
+        {%- endfor %}
+                <li class="page-item {% if not author_posts.has_next %} disabled {% endif %} ">
+                    <a class="page-link" href="{{ url_for('views.author', id=author.id, page=author_posts.next_num) }}">Next</a>
+                </li>
+            </ul>      
+    </nav>
 
 {% endblock %}
 

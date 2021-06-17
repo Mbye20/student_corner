@@ -7,6 +7,15 @@ body  {
   height: 200px;
 }
 
+.content{
+  white-space: pre-wrap;
+
+}
+.bio{
+  white-space: pre-wrap;
+
+}
+
 .h-background-c{
   background-color: #111340;
 }

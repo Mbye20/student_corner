@@ -6,7 +6,7 @@
       <li class="page-item {% if not pagination.has_prev %} disabled {% endif %} ">
           <a class="page-link" href="{{ url_for(endpoint, page=pagination.prev_num) }}">Previous</a>
       </li>
-      {%- for page in pagination.iter_pages(left_edge=2, left_current=1, right_current=2, right_edge=2) %}
+      {%- for page in pagination.iter_pages(left_edge=1, left_current=1, right_current=2, right_edge=1) %}
           {% if page %}
                 {% if page != pagination.page %}
                       <li class="page-item"><a class="page-link" href="{{ url_for(endpoint, page=page) }}"> {{ page }} </a></li>
@@ -25,4 +25,20 @@
           </ul>      
   </nav>
 
+{%- endmacro %}
+
+{% macro input(name, type="text", label = "", value = "") -%}
+    <input type="{{ type }}" name="{{ name }}" value="{{ value }}" class="form-control" id="floatingInput" placeholder="name@example.com" autocomplete="off" autofocus required>
+    <label for="floatingInput">{{ label }}</label>
+
+{%- endmacro %}
+
+{% macro button(label = "Submit") -%}
+    <button class="w-30 btn btn-lg btn-primary" type="submit">{{ label }}</button>
+{%- endmacro %}
+
+
+{% macro textarea(name, value="", label = "") -%}
+    <textarea name="{{ name }}" class="form-control" id="floatingTextarea2"  placeholder="This is my post...">{{ value }}</textarea>
+    <label for="floatingTextarea2">{{ label }}</label>
 {%- endmacro %}

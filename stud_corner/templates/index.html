@@ -1,4 +1,4 @@
-{% from "pagination.html" import render_pagination with context %}
+{% from "app_macros.html" import render_pagination with context %}
 {% extends "layout.html" %}
 
 {% set active_page = "index" %}
@@ -25,9 +25,9 @@
                 <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} by <a href="{{ url_for('views.author', id = post.author.id) }}" class="text-decoration-none link-dark">{{ ("%s %s" %(post.author.firstname, post.author.lastname))|title }}</a></p>
                 <hr>
                 {% if post.content |wordcount > 50 %}
-                <p>{{ post.content |replace("\n", "</br>") |safe |urlize|truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
+                <p class="content">{{ post.content |urlize|truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
                 {% else %}
-                <p>{{ post.content |replace("\n", "</br>") |safe |urlize }}</p>
+                <p class="content">{{ post.content |urlize }}</p>
                 {% endif %}                
             </article>
         </div>

@@ -14,7 +14,7 @@ views = Blueprint('views', __name__)
 def index():
     page = request.args.get("page", 1, int)
     pag_posts = (Posts.query.order_by(Posts.date_posted
-    .desc()).paginate(page = page, per_page = 2))
+    .desc()).paginate(page = page, per_page = 5))
     return render_template("/index.html", pag_posts = pag_posts)
         
 
@@ -63,17 +63,17 @@ def post():
     
     current_user_posts = (Posts.query.filter_by(user_id = current_user.id)
     .order_by(Posts.date_posted.desc())
-    .paginate(page = page, per_page = 2))
+    .paginate(page = page, per_page = 5))
 
     return render_template("/post.html", current_user_posts = current_user_posts)
 
-@views.route('/author/<int:id>')
+@views.route('/author/<int:id>/')
 def author(id):
-    page = request.args.get("page", 1, int)
     author = User.query.get_or_404(id)
+    page = request.args.get("page", 1, int)
     author_posts = (Posts.query.filter_by(user_id = author.id)
     .order_by(Posts.date_posted.desc())
-    .paginate(page = page, per_page = 2))
+    .paginate(page = page, per_page = 5))
     return render_template("/author.html", author = author, author_posts = author_posts)
 
 @views.route('/read_more/<int:id>')
