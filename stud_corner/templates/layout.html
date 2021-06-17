@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-100">
     <head>
         <!-- Required meta tags -->
         <meta charset="utf-8">
@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
         <title>{% block title%}{% endblock %}</title>
     </head>
-    <body>
+    <body class="d-flex flex-column h-100">
         {% include "navbar.html" %}
 
         <header>
@@ -61,7 +61,11 @@
 
         <footer class="footer mt-auto py-3 bg-dark">
             <div class="container">
-              <span class="text-muted">Developed by Mbye Sallah. &copy 2020</span>
+                <span class="text-muted">Developed by 
+                    <a href="https://www.linkedin.com/in/mbye-sallah-7b920815a?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BwGJpbFduSYuQjBkoqVSg6A%3D%3D" target="_blank" class="text-decoration-none link-muted">
+                         Mbye Sallah.
+                    </a> &copy 2020
+                </span>
             </div>
         </footer>
 
