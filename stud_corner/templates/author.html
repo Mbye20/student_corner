@@ -15,28 +15,27 @@
 {% endblock %}
 {% block content %}
 <br>
-<div class="container col-md-7">
-    <div class="row justify-content-center">
-        <h3>{{ ("By %s %s" %(author.firstname, author.lastname))|title}}</h3>
-    </div>
-</div>
-    {% for post in author_posts.items %}
-    <div class="container col-md-7 bg-white rounded shadow border mb-3">
+{% for post in author_posts.items %}
+    <div class="container col-md-7 mt-3">
         <div class="row justify-content-center">
-            <article class="blog-post by-3">
-                <h5 class="blog-post-title">{{ post.title }}</h5>
-                <h6 class="blog-post-title">{{ post.subject }}</h6>
-                <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }}</p>
-                <hr>
+          <div class="row g-0 border rounded overflow-hidden mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+                <strong class="d-inline-block mb-2 text-success">{{ post.subject |title }}</strong>
+                <h3 class="mb-0">{{ post.title |title }}</h3>
+                <div class="mb-1 text-muted">{{ post.date_posted.strftime("%d %B %Y") }}</div>
                 {% if post.content |wordcount > 50 %}
-                <p class="content">{{ post.content |urlize|truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
+                    <p class="card-text mb-auto content">{{ post.content |urlize|truncate(400) }}</p>
+                    <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">
+                        Continue reading
+                    </a>
                 {% else %}
-                <p class="content">{{ post.content |urlize }}</p>
-                {% endif %}
-            </article>
+                    <p class="card-text mb-auto content">{{ post.content |urlize }}</p>
+                {% endif %} 
+            </div>
+          </div>
         </div>
     </div>
-    {% endfor %}
+{% endfor %}
     
 <nav aria-label="pagination for author's posts">
     <ul class="pagination justify-content-center mt-5">

@@ -29,52 +29,68 @@
 <br>
 {% if current_user_posts %}
 
-    <div class="container col-md-6">
-        <div class="row justify-content-center">
-            <h3>Previous Posts </h3>
-        </div>
-    </div>
     {% for post in current_user_posts.items %}
-        <div class="container col-md-6 bg-white rounded shadow border mb-3">
+ 
+        <div class="container col-md-6 mt-3">
             <div class="row justify-content-center">
-                <article class="blog-post by-3">
-                    <h5 class="blog-post-title">{{ post.title |title  }}</h5>
-                    <h6 class="blog-post-title">{{ post.subject |title }}</h6>
-                    <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} </p>
-                    <hr>
-                    {% if post.content |wordcount > 50 %}
-                        <p class="content">{{ post.content |truncate(400)|urlize }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
+                <div class="row g-0 border rounded overflow-hidden mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-2 text-success">{{ post.subject |title }}</strong>
+                        <h3 class="mb-0">{{ post.title |title }}</h3>
+                        <div class="mb-1 text-muted">{{ post.date_posted.strftime("%d %B %Y") }}</div>
+                        {% if post.content |wordcount > 50 %}
+                            <p class="card-text mb-auto content">{{ post.content |urlize|truncate(400) }}</p>
+                            <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">
+                                Continue reading
+                            </a>
                         {% else %}
-                        <p class="content">{{ post.content |urlize}}</p>
-                    {% endif %}
-                </article>
-                <!-- Button trigger modal -->
-                <div class="d-flex justify-content-end">   
-                    <span><button type="button" class="w-30 btn btn-sm btn-success mx-3 mb-3"><a href="{{ url_for('views.update_post', id = post.id) }}" class="text-decoration-none link-light">Update</a></button></span>
-                    <span><button type="button" class="w-30 btn btn-sm btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#deleteModal{{ post.id }}">
-                        Delete</button></span>
-                </div>
-                <!-- Modal -->
-                <div class="modal fade" id="deleteModal{{ post.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="deleteModalLabel">Deleting this post!</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                Are you sure you want to delete this post?
-                              </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-danger"><a href="{{ url_for('views.delete_post', id = post.id) }}" class="text-decoration-none link-light">Delete</a></button>
+                            <p class="card-text mb-auto content">{{ post.content |urlize }}</p>
+                        {% endif %} 
+                    </div>
+                    
+                    
+                    <!-- Button trigger modal -->
+                    <div class="d-flex justify-content-end">   
+                        <span>
+                            <button type="button" class="w-30 btn btn-sm btn-success m-3">
+                            <a href="{{ url_for('views.update_post', id = post.id) }}" class="text-decoration-none link-light">
+                                Update
+                            </a>
+                            </button>
+                        </span>
+                        <span>
+                            <button type="button" class="w-30 btn btn-sm btn-danger m-3" data-bs-toggle="modal" data-bs-target="#deleteModal{{ post.id }}">
+                            Delete</button>
+                        </span>
+                        </div>
+                        <!-- Modal -->
+                    <div class="modal fade" id="deleteModal{{ post.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel">Deleting this post!</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete this post?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="submit" class="btn btn-danger">
+                                        <a href="{{ url_for('views.delete_post', id = post.id) }}" class="text-decoration-none link-light">
+                                            Delete
+                                        </a>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+    
     {% endfor %}
 {% endif %}
 

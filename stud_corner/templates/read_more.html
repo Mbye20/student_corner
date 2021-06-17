@@ -2,21 +2,21 @@
 {% block title %} {{post.title}} {% endblock %}
 
 {% block content %}
-<div class="container col-md-7 mt-3">
-    <div class="row justify-content-center">
-        <h3>{{ ("By %s %s" %(post.author.firstname, post.author.lastname)) |title}}</h3>
-    </div>
-</div>
-    <div class="container col-md-7 bg-white rounded shadow border mb-3">
+    <div class="container col-md-7 mt-3">
         <div class="row justify-content-center">
-            <article class="blog-post by-3">
-                <h5 class="blog-post-title">{{ post.title |title }}</h5>
-                <h6 class="blog-post-title">{{ post.subject |title }}</h6>
-                <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} </p>
-                <hr>
-                <p class="content">{{ post.content|urlize}}</p>
-            </article>
+          <div class="row g-0 border rounded overflow-hidden mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+                <strong class="d-inline-block mb-2 text-success">{{ post.subject |title }}</strong>
+                <h3 class="mb-0">{{ post.title |title }}</h3>
+                <div class="mb-1 text-muted">{{ post.date_posted.strftime("%d %B %Y") }}
+                     by 
+                     <a href="{{ url_for('views.author', id = post.author.id) }}" class="text-decoration-none link-dark">
+                         {{ ("%s %s" %(post.author.firstname, post.author.lastname)) |title}}
+                     </a>
+                </div>
+                <p class="card-text mb-auto content">{{ post.content |urlize }}</p> 
+            </div>
+          </div>
         </div>
     </div>
-    
 {% endblock %}

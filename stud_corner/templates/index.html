@@ -25,21 +25,35 @@
 
 {% block content %}
 {% for post in pag_posts.items %}
-    <div class="container col-md-7 bg-white border rounded shadow my-3">
+    <div class="container col-md-7 mt-3">
         <div class="row justify-content-center">
-            <article class="blog-post">
-                <h4 class="blog-post-title"><a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none link-dark">{{ post.title |title }}</a></h4>
-                <h5 class="blog-post-title">{{ post.subject |title }}</h5>
-                <p class="blog-post-meta">{{ post.date_posted.strftime("%d %B %Y") }} by <a href="{{ url_for('views.author', id = post.author.id) }}" class="text-decoration-none link-dark">{{ ("%s %s" %(post.author.firstname, post.author.lastname))|title }}</a></p>
-                <hr>
+          <div class="row g-0 border rounded overflow-hidden mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+                <strong class="d-inline-block mb-2 text-success">{{ post.subject |title }}</strong>
+                <h3 class="mb-0">
+                    <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none link-dark">
+                        {{ post.title |title }}
+                    </a>
+                </h3>
+                <div class="mb-1 text-muted">{{ post.date_posted.strftime("%d %B %Y") }} by 
+                    <a href="{{ url_for('views.author', id = post.author.id) }}" 
+                    class="text-decoration-none link-dark">
+                    {{ ("%s %s" %(post.author.firstname, post.author.lastname))|title }}
+                    </a>
+                </div>
                 {% if post.content |wordcount > 50 %}
-                <p class="content">{{ post.content |urlize|truncate(400) }} <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">read more</a></p>
+                    <p class="card-text mb-auto content">{{ post.content |urlize|truncate(400) }}</p>
+                    <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none">
+                        Continue reading
+                    </a>
                 {% else %}
-                <p class="content">{{ post.content |urlize }}</p>
-                {% endif %}                
-            </article>
+                    <p class="card-text mb-auto content">{{ post.content |urlize }}</p>
+                {% endif %} 
+            </div>
+          </div>
         </div>
     </div>
+
 {% endfor %}
 
 {{render_pagination(pag_posts, "views.index", name = "pagination for index page" )}}
