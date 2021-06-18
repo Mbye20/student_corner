@@ -25,12 +25,32 @@ def profile():
     if request.method == "POST":
         email = request.form.get("email")
         bio = request.form.get("bio")
-        current_user.email = email
-        current_user.bio = bio
-        db.session.commit()
+        user = User.query.filter_by(email=email).first()
+        if user and user != current_user:
+            flash("An account has already been created with this email address.", "warning")
+            return redirect(url_for("views.profile"))
+        elif bio != current_user.bio and email == current_user.email:
+            current_user.bio = bio
+            db.session.commit()
+            flash("Your Bio is Updated Succesfully!", "success")
+            return redirect(url_for("views.profile"))            
 
-        flash("Your Profile is Updated Succesfully!", "success")
-        return redirect(url_for("views.profile"))
+        elif email != current_user.email and bio == current_user.bio:
+            current_user.email = email
+            db.session.commit()
+            flash("Your Email is Updated Succesfully!", "success")
+            return redirect(url_for("views.profile"))
+
+        elif email != current_user.email and bio != current_user.bio:          
+            current_user.email = email
+            current_user.bio = bio
+            db.session.commit()
+
+            flash("Your Profile is Updated Succesfully!", "success")
+            return redirect(url_for("views.profile"))
+        else:
+            flash("No change have been made on your profile!", "warning")
+            return redirect(url_for("views.profile"))
 
     return render_template(
         "/profile.html",

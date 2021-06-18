@@ -4,8 +4,8 @@
 
 
 {% block header %}
-<div class="container col-md-7 col-11 mt-3 {% if author.bio %}rounded shadow-sm bg-white border{% endif %}">
-    <div class="row p-2 justify-content-center"> 
+<div class="container col-md-7 col-11 mt-3 {% if author.bio %}rounded col-11 shadow-sm bg-white border{% endif %}">
+    <div class="row justify-content-center"> 
         <h5 class="fw-bold">{{ ("%s %s" %(author.firstname, author.lastname))|title }} <span class="fs-6">({{ author_posts.total }})</span></h5>
         {% if author.bio %}
             <p class="bio">{{ author.bio }}</p>
@@ -67,5 +67,6 @@
         </nav>
     {% endif %}
 {% endblock %}
+
 
 

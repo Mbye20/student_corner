@@ -2,14 +2,15 @@
 
 {% extends "layout.html" %}
 {% set active_page = "profile" %}
+
 {% block content %}
-    <div class="container col-md-6 rounded shadow mt-3 mb-3 bg-white border">
+    <div class="container col-11 col-md-6 rounded shadow mt-3 mb-3 bg-white border">
         <div class="fs-3 me-5">
-           <h1>{{ "%s %s" %(firstname, lastname) }}</h1>
+           <h3 class="fw-bold">{{ "%s %s" %(firstname, lastname) }}</h3>
         </div>
         <p>{{email}}</p>
         
-        <p>Update Profile</p>
+        <p class="fw-bold">Update Profile</p>
         <hr>
         <form method="POST">
             <div class="form-floating mb-3">
@@ -30,3 +31,5 @@
         </form>
     </div>
 {% endblock %}
+
+
