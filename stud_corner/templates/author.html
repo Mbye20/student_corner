@@ -5,23 +5,27 @@
 
 {% block header %}
 {% if author.bio %}
-    <div class="container col-md-7 mt-3 rounded shadow bg-white border">
-        <div class="row justify-content-center"> 
-            <h5>{{ ("%s %s" %(author.firstname, author.lastname))|title }}</h5>
+    <div class="container col-md-7 col-11 mt-3 rounded shadow-sm bg-white border">
+        <div class="row p-2 justify-content-center"> 
+            <h5>{{ ("%s %s" %(author.firstname, author.lastname))|title }} <span class="fs-6">({{ author_posts.total }})</span></h5>
             <p class="bio">{{ author.bio }}</p>
         </div>
     </div>
 {% endif %}
 {% endblock %}
 {% block content %}
-<br>
+
 {% for post in author_posts.items %}
     <div class="container col-md-7 mt-3">
         <div class="row justify-content-center">
           <div class="row g-0 border rounded overflow-hidden mb-4 shadow-sm h-md-250 position-relative">
             <div class="col p-4 d-flex flex-column position-static">
                 <strong class="d-inline-block mb-2 text-success">{{ post.subject |title }}</strong>
-                <h3 class="mb-0">{{ post.title |title }}</h3>
+                <h3 class="mb-0">
+                    <a href="{{ url_for('views.read_more', id = post.id) }}" class="text-decoration-none link-dark">
+                        {{ post.title |title }}
+                    </a>
+                </h3>
                 <div class="mb-1 text-muted">{{ post.date_posted.strftime("%d %B %Y") }}</div>
                 {% if post.content |wordcount > 50 %}
                     <p class="card-text mb-auto content">{{ post.content |urlize|truncate(400) }}</p>
@@ -36,31 +40,32 @@
         </div>
     </div>
 {% endfor %}
-    
-<nav aria-label="pagination for author's posts">
-    <ul class="pagination justify-content-center mt-5">
-        <li class="page-item {% if not author_posts.has_prev %} disabled {% endif %} ">
-            <a class="page-link" href="{{ url_for('views.author', id=author.id, page=author_posts.prev_num) }}">Previous</a>
-        </li>
-        {%- for page in author_posts.iter_pages(left_edge=2, left_current=1, right_current=2, right_edge=2) %}
-            {% if page %}
-                {% if page != author_posts.page %}
-                        <li class="page-item"><a class="page-link" href="{{ url_for('views.author', id=author.id, page=page) }}"> {{ page }} </a></li>
-                {% else %}
-                    <li class="page-item active" aria-current="page">
-                        <span class="page-link"> {{ page }} </span>
-                    </li>
-                {% endif %}
-            {% else %}
-                <span>…</span>
-            {% endif %}
-        {%- endfor %}
-                <li class="page-item {% if not author_posts.has_next %} disabled {% endif %} ">
-                    <a class="page-link" href="{{ url_for('views.author', id=author.id, page=author_posts.next_num) }}">Next</a>
-                </li>
-            </ul>      
-    </nav>
 
+    {% if author_posts.total > 5 %}
+        <nav aria-label="pagination for author's posts">
+            <ul class="pagination justify-content-center mt-5">
+                <li class="page-item {% if not author_posts.has_prev %} disabled {% endif %} ">
+                    <a class="page-link" href="{{ url_for('views.author', id=author.id, page=author_posts.prev_num) }}">Previous</a>
+                </li>
+            {%- for page in author_posts.iter_pages(left_edge=2, left_current=1, right_current=2, right_edge=2) %}
+                {% if page %}
+                    {% if page != author_posts.page %}
+                            <li class="page-item"><a class="page-link" href="{{ url_for('views.author', id=author.id, page=page) }}"> {{ page }} </a></li>
+                    {% else %}
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link"> {{ page }} </span>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <span>…</span>
+                {% endif %}
+            {%- endfor %}
+                    <li class="page-item {% if not author_posts.has_next %} disabled {% endif %} ">
+                        <a class="page-link" href="{{ url_for('views.author', id=author.id, page=author_posts.next_num) }}">Next</a>
+                    </li>
+            </ul>      
+        </nav>
+    {% endif %}
 {% endblock %}
 
 

@@ -9,14 +9,21 @@ body  {
 
 .content{
   white-space: pre-wrap;
+  text-align: justify;
+  text-justify: inter-word;
 
 }
 .bio{
   white-space: pre-wrap;
+  text-align: justify;
+  text-justify: inter-word;
 
 }
-
+/*
 .h-background-c{
   background-color: #111340;
-}
+}*/
 
+.background{
+  background-color: #172a33;
+}

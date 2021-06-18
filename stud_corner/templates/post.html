@@ -93,9 +93,9 @@
     
     {% endfor %}
 {% endif %}
-
-{{render_pagination(current_user_posts, "views.post", name = "pagination for post page" )}}
-
+{% if current_user_posts.total > 5 %}
+    {{render_pagination(current_user_posts, "views.post", name = "pagination for post page" )}}
+{% endif %}
 {% endblock %}
 
 
