@@ -7,13 +7,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-lg-0">
-                <li class="nav-item mx-lg-3">
+                <li class="nav-item mx-lg-2">
                     <a class="nav-link fw-bold {% if active_page=='index' %}active{% endif %}" aria-current="page" href="/">Home</a>
                 </li>
-                <li class="nav-item me-lg-3">
+                <li class="nav-item me-lg-2">
                     <a class="nav-link fw-bold {% if active_page=='about' %}active{%endif %}" aria-current="page" href="#">About</a>
                 </li>
-                <li class="nav-item me-lg-3">
+                <li class="nav-item me-lg-2">
                     <a class="nav-link fw-bold {% if active_page=='contacts' %}contacts{%endif %}" aria-current="page" href="#" tabindex="-1">Contacts</a>
                 </li>
             </ul>
@@ -22,21 +22,21 @@
             </form>      
             <ul class="navbar-nav ms-auto mb-lg-0">
                 {% if current_user.is_authenticated %}
-                    <li class="nav-item mx-lg-3">
+                    <li class="nav-item mx-lg-2">
                         <a class="nav-link fw-bold {% if active_page=='post' %}active{%endif %}" aria-current="page" href="{{ url_for('views.post') }}">My Posts</a>
                     </li>
-                    <li class="nav-item me-lg-3">
+                    <li class="nav-item me-lg-2">
                         <a class="nav-link fw-bold {% if active_page=='profile' %}active{%endif %}" aria-current="page" href="{{ url_for('views.profile') }}">My Account</a>
                     </li>
-                    <li class="nav-item me-lg-3">
+                    <li class="nav-item me-lg-2">
                         <a class="nav-link fw-bold" href="{{ url_for('auth.logout') }}">Logout</a>
                     </li>
                 {% else %}
 
-                    <li class="nav-item me-lg-3">
+                    <li class="nav-item me-lg-2">
                         <a class="nav-link fw-bold {% if active_page=='login' %}active{%endif %}" aria-current="page" href="{{ url_for('auth.login') }}">Login</a>
                     </li>
-                    <li class="nav-item me-lg-3">
+                    <li class="nav-item me-lg-2">
                         <a class="nav-link fw-bold {% if active_page=='signup' %}active{%endif %}" aria-current="page" href="{{ url_for('auth.signup') }}">Sign Up</a>
                     </li>
                 {% endif %}
