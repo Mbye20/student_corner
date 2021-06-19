@@ -14,7 +14,7 @@ migrate = Migrate()
 def create_app():
     # create and configure the app
     app = Flask(__name__, instance_relative_config=False)
-    # Add app.app_context() tp enable current_app to be used
+    # Add app.app_context() to enable current_app to be used
     with app.app_context():
         # Do not forget changing to dev config while working locally
         from config import ProductionConfig
@@ -26,6 +26,8 @@ def create_app():
 
         login_manager = LoginManager()
         login_manager.login_view = "auth.login"
+        login_manager.login_message = u"Please login to access this page."
+        login_manager.login_message_category = "warning"
         login_manager.init_app(app)
 
         from .models import User

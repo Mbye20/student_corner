@@ -105,6 +105,8 @@ def read_more(id):
 @login_required
 def update_post(id):
     to_update_post = Posts.query.get_or_404(id)
+    if to_update_post.author != current_user:
+        abort(403)
     if request.method == "POST":
         subject = request.form.get("subject")
         title = request.form.get("title")

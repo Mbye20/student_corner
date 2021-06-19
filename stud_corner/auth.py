@@ -18,7 +18,10 @@ def login():
         #Get the email and password
         email = request.form.get("email")
         password = request.form.get("password")
-        remember = True if request.form.get("remember") else False
+        if request.form.get("remember"):
+            remember = True  
+        else:
+            remember = False
 
         user = User.query.filter_by(email=email).first()
 

@@ -7,6 +7,9 @@ load_dotenv()
 
 class Config(object):
     SECRET_KEY = environ.get('SECRET_KEY')
+    REMEMBER_COOKIE_DURATION = timedelta(hours=3)
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
     ####Configure Email Credential
     MAIL_SERVER='smtp.gmail.com'
     MAIL_PORT = 465
@@ -15,8 +18,6 @@ class Config(object):
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
     MAIL_DEFAULT_SENDER = ("Student Corner Web", environ.get('MAIL_USERNAME'))
-    REMEMBER_COOKIE_DURATION = timedelta(days=1)
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URL')
