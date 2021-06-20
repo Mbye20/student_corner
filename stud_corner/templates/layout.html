@@ -18,14 +18,11 @@
     <body class="d-flex flex-column h-100">
         {% include "navbar.html" %}
 
-        <header>
-            {% block header %}{% endblock %}
-        </header>
         <section>
-        
-            {% with messages = get_flashed_messages( with_categories = true) %}
-                {% if messages %}
-
+            
+        {% with messages = get_flashed_messages( with_categories = true) %}
+            {% if messages %}
+            
                     <div class="container mt-3">
                         <div class="row justify-content-md-center">
                             <ul class="flashes col-md-10">
@@ -55,9 +52,12 @@
                             </ul>
                         </div>
                     </div>
-
+                    
                 {% endif %}
             {% endwith %}
+            <header>
+                {% block header %}{% endblock %}
+            </header>
     
 
             {% block content %}{% endblock %}
