@@ -1,5 +1,5 @@
 body  {
-  background-color: #eee;
+  background-color: #fafcfa;
   /*padding-top: 70px;*/
 }
 
@@ -23,7 +23,11 @@ body  {
 .h-background-c{
   background-color: #111340;
 }*/
-
+/*Background color for the navbar and footer*/
 .background{
   background-color: #172a33;
+}
+/*Background color for the cards*/
+.bg{
+  background-color: eee;
 }

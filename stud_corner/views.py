@@ -27,7 +27,7 @@ def index():
         Posts.content.contains(f'{to_search}'),
         User.firstname.startswith(to_search[:3]),
         User.lastname.endswith(to_search[-3:])
-        ))
+        )).order_by(Posts.date_posted.desc())
         .paginate(page = page, per_page = 5))
         if pag_posts.total == 0:
             flash("Nothing related to your search was found.", "warning")
@@ -118,7 +118,8 @@ def author(id):
         .filter(or_(Posts.title.ilike(f'%{to_search}%'),
         Posts.subject.ilike(f'%{to_search}%'),
         Posts.content.contains(f'{to_search}'),
-        )).paginate(page = page, per_page = 5))
+        )).order_by(Posts.date_posted.desc())
+        .paginate(page = page, per_page = 5))
         if author_posts.total == 0:
             flash("Nothing related to your search was found.", "warning")
             return redirect(url_for("views.author", id = author.id))
