@@ -17,9 +17,11 @@
                     <a class="nav-link fw-bold {% if active_page=='contacts' %}contacts{%endif %}" aria-current="page" href="#" tabindex="-1">Contacts</a>
                 </li>
             </ul>
+            {% if active_page== "index" or active_page== "author" %}
             <form class="col-12 col-lg-6 d-none d-lg-block">
-                <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
-            </form>      
+                <input type="search" name="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search" autocomplete="off" autofocus>
+            </form>
+            {% endif %}
             <ul class="navbar-nav ms-auto mb-lg-0">
                 {% if current_user.is_authenticated %}
                     <li class="nav-item mx-lg-2">
@@ -42,9 +44,11 @@
                 {% endif %}
 
             </ul>
-            <form class="col-10 d-lg-none">
-                <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
-            </form>      
+            {% if active_page == "index" or active_page=="author" %}
+            <form class="col-12 d-lg-none">
+                <input type="search" name="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search" autocomplete="off" autofocus>
+            </form>
+            {% endif %}      
             
         </div>
     </div>             

@@ -16,6 +16,9 @@ class User(UserMixin, db.Model):
     bio = db.Column(db.Text, nullable=True)
     posts = db.relationship('Posts', backref='author', lazy=True)
 
+    def __repr__(self):
+        return "<User(firstname='%s', lastname='%s', email='%s')>" % (self.firstname, self.lastname, self.email)
+
 
 
 class Posts(db.Model):
@@ -26,6 +29,8 @@ class Posts(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
-    
+    def __repr__(self):
+        return "<Posts(subject='%s', title='%s')>" % (self.subject, self.title)
+
 
 
