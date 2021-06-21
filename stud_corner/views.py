@@ -84,6 +84,7 @@ def profile():
 @login_required
 def post():
     page = request.args.get("page", 1, int)
+    to_search = request.args.get("search")
     if request.method == "POST":
         subject = request.form.get("subject")
         title = request.form.get("title")
@@ -100,10 +101,21 @@ def post():
 
         flash("Your post is successfully created.", "success")
         return redirect(url_for("views.post"))
-    
-    current_user_posts = (Posts.query.filter_by(user_id = current_user.id)
-    .order_by(Posts.date_posted.desc())
-    .paginate(page = page, per_page = 5))
+    if to_search:
+        to_search = to_search.strip()
+        current_user_posts = (Posts.query.filter_by(user_id = current_user.id)
+        .filter(or_(Posts.title.ilike(f'%{to_search}%'),
+        Posts.subject.ilike(f'%{to_search}%'),
+        Posts.content.contains(f'{to_search}'),
+        )).order_by(Posts.date_posted.desc())
+        .paginate(page = page, per_page = 5))
+        if current_user_posts.total == 0:
+            flash("Nothing related to your search was found.", "warning")
+            return redirect(url_for("views.post"))
+    else:
+        current_user_posts = (Posts.query.filter_by(user_id = current_user.id)
+        .order_by(Posts.date_posted.desc())
+        .paginate(page = page, per_page = 5))
 
     return render_template("/post.html", current_user_posts = current_user_posts)
 

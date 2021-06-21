@@ -17,7 +17,7 @@
                     <a class="nav-link fw-bold {% if active_page=='contacts' %}contacts{%endif %}" aria-current="page" href="#" tabindex="-1">Contacts</a>
                 </li>
             </ul>
-            {% if active_page== "index" or active_page== "author" %}
+            {% if active_page== "index" or active_page== "author" or active_page== "post" %}
             <form class="col-12 col-lg-6 d-none d-lg-block">
                 <input type="search" name="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search" autocomplete="off" autofocus>
             </form>
@@ -28,7 +28,7 @@
                         <a class="nav-link fw-bold {% if active_page=='post' %}active{%endif %}" aria-current="page" href="{{ url_for('views.post') }}">My Posts</a>
                     </li>
                     <li class="nav-item me-lg-2">
-                        <a class="nav-link fw-bold {% if active_page=='profile' %}active{%endif %}" aria-current="page" href="{{ url_for('views.profile') }}">My Account</a>
+                        <a class="nav-link fw-bold {% if active_page=='profile' %}active{%endif %}" aria-current="page" href="{{ url_for('views.profile') }}">Profile</a>
                     </li>
                     <li class="nav-item me-lg-2">
                         <a class="nav-link fw-bold" href="{{ url_for('auth.logout') }}">Logout</a>
@@ -44,7 +44,7 @@
                 {% endif %}
 
             </ul>
-            {% if active_page == "index" or active_page=="author" %}
+            {% if active_page == "index" or active_page=="author" or active_page== "post" %}
             <form class="col-12 d-lg-none">
                 <input type="search" name="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search" autocomplete="off" autofocus>
             </form>
