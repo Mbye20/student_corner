@@ -5,6 +5,7 @@ from . import db
 
 
 class User(UserMixin, db.Model):
+    __tablename__="users"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     firstname = db.Column(db.String(80), nullable=False)
@@ -28,7 +29,7 @@ class Posts(db.Model):
     title = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     def __repr__(self):
         return "<Posts(subject='%s', title='%s')>" % (self.subject, self.title)

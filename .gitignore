@@ -5,3 +5,4 @@ test.py
 .env
 instance
 myapp.egg-info
+migrations

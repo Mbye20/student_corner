@@ -22,9 +22,9 @@ def index():
         pag_posts = (Posts.query.join(User)
         .filter(or_(Posts.title.ilike(f'%{to_search}%'),
         Posts.subject.ilike(f'%{to_search}%'),
+        Posts.content.ilike(f'%{to_search}%'),
         User.firstname.ilike(f'%{to_search}%'),
         User.lastname.ilike(f'%{to_search}%'),
-        Posts.content.contains(f'{to_search}'),
         User.firstname.startswith(to_search[:3]),
         User.lastname.endswith(to_search[-3:])
         )).order_by(Posts.date_posted.desc())
@@ -106,7 +106,7 @@ def post():
         current_user_posts = (Posts.query.filter_by(user_id = current_user.id)
         .filter(or_(Posts.title.ilike(f'%{to_search}%'),
         Posts.subject.ilike(f'%{to_search}%'),
-        Posts.content.contains(f'{to_search}'),
+        Posts.content.ilike(f'%{to_search}%'),
         )).order_by(Posts.date_posted.desc())
         .paginate(page = page, per_page = 5))
         if current_user_posts.total == 0:
@@ -129,7 +129,7 @@ def author(id):
         author_posts = (Posts.query.filter_by(user_id = author.id)
         .filter(or_(Posts.title.ilike(f'%{to_search}%'),
         Posts.subject.ilike(f'%{to_search}%'),
-        Posts.content.contains(f'{to_search}'),
+        Posts.content.ilike(f'%{to_search}%'),
         )).order_by(Posts.date_posted.desc())
         .paginate(page = page, per_page = 5))
         if author_posts.total == 0:
