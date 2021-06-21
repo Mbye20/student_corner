@@ -14,6 +14,10 @@ auth = Blueprint('auth', __name__)
 #Login Page
 @auth.route("/login", methods = ['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        flash("Sorry, you are already login.", "warning")
+        return redirect(url_for("views.index"))
+
     if request.method == 'POST':
         #Get the email and password
         email = request.form.get("email")
@@ -46,7 +50,6 @@ def login():
         login_user(user, remember= remember)
         return redirect(url_for("views.index"))
         
-
     #Return login page if request is get
     return render_template("/login.html")
 
@@ -61,6 +64,9 @@ def logout():
 
 @auth.route("/signup", methods = ['POST', 'GET'])
 def signup():
+    if current_user.is_authenticated:
+        flash("Sorry, you are already login.", "warning")
+        return redirect(url_for("views.index"))
     if request.method == "POST":
         #Get the data entered by the user
         firstname = request.form.get("firstname")

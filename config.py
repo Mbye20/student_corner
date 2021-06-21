@@ -1,14 +1,14 @@
 from os import environ
-from datetime import timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
-class Config(object):
+class Config():
     SECRET_KEY = environ.get('SECRET_KEY')
-    REMEMBER_COOKIE_DURATION = timedelta(hours=3)
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # REMEMBER_COOKIE_DURATION = timedelta(hours=3)
+    REMEMBER_COOKIE_HTTPONLY=True
+    REMEMBER_COOKIE_SECURE=True
 
     ####Configure Email Credential
     MAIL_SERVER='smtp.gmail.com'
@@ -19,17 +19,14 @@ class Config(object):
     MAIL_USE_SSL = True
     MAIL_DEFAULT_SENDER = ("Student Corner Web", environ.get('MAIL_USERNAME'))
 
-class DevelopmentConfig(Config):
+    # Database Configurations
     SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URL')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True
     DEBUG = True
 
-
-class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URL')
     if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
         SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
-    DEBUG = False
-    SQLALCHEMY_ECHO = False
+        DEBUG = False
+        SQLALCHEMY_ECHO = False
 
-    
