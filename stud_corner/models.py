@@ -1,3 +1,4 @@
+from flask import current_app
 from flask_login import UserMixin
 from datetime import datetime
 from . import db
@@ -32,5 +33,10 @@ class Posts(db.Model):
     def __repr__(self):
         return "<Posts(subject='%s', title='%s')>" % (self.subject, self.title)
 
+
+#To not import tables and db
+@current_app.shell_context_processor
+def make_shell_context():
+    return dict(db=db, User=User, Posts=Posts)
 
 
