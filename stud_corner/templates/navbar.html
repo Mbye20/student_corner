@@ -25,21 +25,21 @@
             <ul class="navbar-nav ms-auto mb-lg-0">
                 {% if current_user.is_authenticated %}
                     <li class="nav-item mx-lg-2">
-                        <a class="nav-link fw-bold {% if active_page=='post' %}active{%endif %}" aria-current="page" href="{{ url_for('views.post') }}">My Posts</a>
+                        <a class="nav-link fw-bold {% if active_page=='post' %}active{%endif %}" aria-current="page" href="{{ url_for('views.post') }}">Your posts</a>
                     </li>
                     <li class="nav-item me-lg-2">
-                        <a class="nav-link fw-bold {% if active_page=='profile' %}active{%endif %}" aria-current="page" href="{{ url_for('views.profile') }}">Profile</a>
+                        <a class="nav-link fw-bold {% if active_page=='profile' %}active{%endif %}" aria-current="page" href="{{ url_for('views.profile') }}">Your profile</a>
                     </li>
                     <li class="nav-item me-lg-2">
-                        <a class="nav-link fw-bold" href="{{ url_for('auth.logout') }}">Logout</a>
+                        <a class="nav-link fw-bold" href="{{ url_for('auth.logout') }}">Sign out</a>
                     </li>
                 {% else %}
 
                     <li class="nav-item me-lg-2">
-                        <a class="nav-link fw-bold {% if active_page=='login' %}active{%endif %}" aria-current="page" href="{{ url_for('auth.login') }}">Login</a>
+                        <a class="nav-link fw-bold {% if active_page=='login' %}active{%endif %}" aria-current="page" href="{{ url_for('auth.login') }}">Sign in</a>
                     </li>
                     <li class="nav-item me-lg-2">
-                        <a class="nav-link fw-bold {% if active_page=='signup' %}active{%endif %}" aria-current="page" href="{{ url_for('auth.signup') }}">Sign Up</a>
+                        <a class="nav-link fw-bold {% if active_page=='signup' %}active{%endif %}" aria-current="page" href="{{ url_for('auth.signup') }}">Sign up</a>
                     </li>
                 {% endif %}
 
