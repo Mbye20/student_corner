@@ -25,8 +25,8 @@ def create_app():
         migrate.init_app(app, db)
 
         login_manager = LoginManager()
-        login_manager.login_view = "auth.login"
-        login_manager.login_message = u"Please login to access this page."
+        login_manager.login_view = "auth.signin"
+        login_manager.login_message = u"Please sign in to access this page."
         login_manager.login_message_category = "warning"
         login_manager.init_app(app)
 

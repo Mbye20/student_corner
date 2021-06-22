@@ -3,7 +3,7 @@ from flask import abort
 from flask import Blueprint, request, render_template, url_for, flash, redirect
 from flask_login import current_user
 from flask_login.utils import login_required
-from sqlalchemy import or_, and_
+from sqlalchemy import or_
 from sqlalchemy.orm import query
 from . import db
 from .models import Posts, User

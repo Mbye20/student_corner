@@ -12,10 +12,10 @@ auth = Blueprint('auth', __name__)
 
 
 #Login Page
-@auth.route("/login", methods = ['GET', 'POST'])
-def login():
+@auth.route("/signin", methods = ['GET', 'POST'])
+def signin():
     if current_user.is_authenticated:
-        flash("Sorry, you are already login.", "warning")
+        flash("Sorry, you are already signed in.", "warning")
         return redirect(url_for("views.index"))
 
     if request.method == 'POST':
@@ -33,33 +33,33 @@ def login():
         # take the user-supplied password, hash it, and compare it to the hashed password in the database
         if not user:
             flash("You entered an invalid email.", "warning")
-            return redirect(url_for("auth.login"))
+            return redirect(url_for("auth.signin"))
         if not check_password_hash(user.password, password):
             flash("You entered an invalid password.", "warning")
             flash("Forgot your password? ", "password-alert")
-            return redirect(url_for("auth.login"))
+            return redirect(url_for("auth.signin"))
 
         if not user.confirmed:
             flash(
-                "Your email had not been confirmed. Please check your inbox to confirm your email address and login again. Didn't get the email?",
+                "Your email had not been confirmed. Please check your inbox to confirm your email address and sign in again. Didn't get the email?",
                 "unconfirmed_email"
                 )
             logout_user()
-            return redirect(url_for("auth.login"))
+            return redirect(url_for("auth.signin"))
 
         login_user(user, remember= remember)
         return redirect(url_for("views.index"))
         
     #Return login page if request is get
-    return render_template("/login.html")
+    return render_template("/signin.html")
 
-@auth.route("/logout")
+@auth.route("/signout")
 @login_required
-def logout():
+def signout():
     #Remove user from session and logout
     logout_user()
     #### session.pop('email', None)
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('auth.signin'))
 
 
 @auth.route("/signup", methods = ['POST', 'GET'])
@@ -111,7 +111,7 @@ def signup():
             "An email has been sent to you email address. Please click it to activate your account.",
             "success"
             )
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('auth.signin'))
     
     return render_template("/signup.html")
 
@@ -129,7 +129,7 @@ def confirm_email(token):
             flash("Your account had already been confirmed.", "success")
             return redirect(url_for("views.index"))
         elif user.confirmed and not current_user.is_authenticated:
-            flash("Your account had already been confirmed. Please login.", "success")
+            flash("Your account had already been confirmed. Please sign in.", "success")
         
         else:
             user.confirmed = True
@@ -137,13 +137,13 @@ def confirm_email(token):
             db.session.add(user)
             db.session.commit()
             flash(
-                "Your account is successfully confirmed. Please enter your Email and Password to login.",
+                "Your account is successfully confirmed. Please enter your Email and Password to sign in.",
                 "success"
                 )
 
     except:
         return redirect(url_for("auth.error"))
-    return redirect(url_for("auth.login"))
+    return redirect(url_for("auth.signin"))
 
 @auth.route('/resend_confirmation', methods = ['POST', 'GET'])
 def resend_confirmation():
@@ -153,15 +153,15 @@ def resend_confirmation():
         if user:
             # Check if the user is already confirmed
             if user.confirmed:
-                flash('Your Email address is already confirmed. Please Login.', 'warning')
-                return redirect(url_for('auth.login'))
+                flash('Your Email address is already confirmed. Please sign in.', 'warning')
+                return redirect(url_for('auth.signin'))
             token = generate_confirmation_token(email)
             confirm_url = url_for('auth.confirm_email', token=token, _external=True)
             html = render_template('confirm.html', confirm_url=confirm_url)
             subject = "Email Confirmation"
             send_email(user.email, subject, html)
             flash('A new confirmation email has been sent.', 'success')
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.signin'))
         else:
             flash("You entered an invalid email.", "warning")
             return redirect(url_for("auth.resend_confirmation"))
@@ -209,7 +209,7 @@ def reset_password_form(token):
             user.password = generate_password_hash(password1)
             db.session.commit()
             flash(
-                "Your password is successfully renewed. Please enter your email and new Password to login.",
+                "Your password is successfully renewed. Please enter your email and new Password to sign in.",
                 "success"
                 )
         except:
@@ -218,7 +218,7 @@ def reset_password_form(token):
                 "danger"
                 )
             return redirect(url_for("auth.reset_password_request"))
-        return redirect(url_for("auth.login"))
+        return redirect(url_for("auth.signin"))
 
     return render_template("reset_password_form.html")
 
