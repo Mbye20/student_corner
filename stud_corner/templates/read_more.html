@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
-{% block meta -%}
-        <meta name="author" content= "{{ '%s %s' %(post.author.firstname, post.author.lastname) }}">
-        <meta name="description" content="{{ post.title }}">
-        <meta name="keywords" content="{{ post.subject }}">
-{%- endblock %}
+{% block meta %}
+      <meta name="author" content= "{{ '%s %s' %(post.author.firstname, post.author.lastname) }}">
+      <meta name="description" content="{{ post.title }}">
+      <meta name="keywords" content="{{ post.subject }}">
+{% endblock %}
 {% block title %} {{ post.title }} {% endblock %}
 
 {% block content %}
