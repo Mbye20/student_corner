@@ -1,5 +1,12 @@
 {% extends "layout.html" %}
 {% set active_page = "index" %}
+{% block meta %}
+        <meta name="author" content= "{{ '%s %s' %(author.firstname, author.lastname) }}">
+        {% if author.bio %}
+        <meta name="description" content="{{ author.bio }}">
+        {% endif %}
+        <meta name="keywords" content="{% for post in author_posts.items %}{{ post.subject }}, {% endfor %}">
+{% endblock %}
 
 
 {% block title %} {{author.firstname}} {{author.lastname}} {% endblock %}

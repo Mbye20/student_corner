@@ -1,27 +1,28 @@
 <!doctype html>
 <html lang="en" class="h-100">
     <head>
-        <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="website to read, write and share articles with others">
         <meta name="google-site-verification" content="bsp5Bdfuf68IKdnVeAsCXkh9VXyD8LPN0IPyqOW0uIA" />
         <meta name="google-site-verification" content="l-McnRi2xL5OKRphbzQqlDYdG3C6bQWLS_ercVJlmXk" />
         <meta name="google-site-verification" content="Z_vhPYodqZjcsFDSNbzpIrx2lVxVgRDNGNq3CToAHAE" />
+        {% block meta %}
+        <meta name="keywords" content="Read, Write, Share, Article, Post"> 
+        {% endblock %}
 
 
-
-        <!-- Bootstrap CSS -->
         <link href="{{ url_for('static', filename='boots_css/bootstrap.min.css') }}" rel="stylesheet" >
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-        <title>{% block title%}Student Corner{% endblock %}</title>
+        <title>{% block title -%}Student Corner{%- endblock %}</title>
     </head>
     <body class="d-flex flex-column h-100">
-        {% include "navbar.html" %}
+        {% include "navbar.html" -%}
 
         <section>
             
-        {% with messages = get_flashed_messages( with_categories = true) %}
-            {% if messages %}
+        {% with messages = get_flashed_messages( with_categories = true) -%}
+            {%- if messages %}
             
                     <div class="container mt-3">
                         <div class="row justify-content-md-center">
@@ -44,23 +45,23 @@
                                 </div>
                                 {% elif category == "unconfirmed_email" %}
                                 <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
-                                    {{ message }} <a href="{{ url_for('auth.resend_confirmation') }}">Resend</a>
+                                    {{ message }} <a href="{{ url_for('auth.resend_confirmation') }}" class="text-decoration-none">Resend</a>
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
-                                {% endif %}
-                                {% endfor %}
+                                {% endif -%}
+                                {% endfor -%}
                             </ul>
                         </div>
                     </div>
                     
-                {% endif %}
-            {% endwith %}
+                {% endif -%}
+            {%- endwith %}
             <header>
-                {% block header %}{% endblock %}
+                {%- block header %}{% endblock -%}
             </header>
     
 
-            {% block content %}{% endblock %}
+            {%- block content %}{% endblock -%}
 
         </section>
 

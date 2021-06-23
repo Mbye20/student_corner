@@ -19,6 +19,8 @@ def create_app():
         # Do not forget changing to dev config while working locally
         from config import Config
         app.config.from_object(Config())
+        app.jinja_env.trim_blocks = True
+        app.jinja_env.lstrip_blocks = True
 
         mail.init_app(app)
         db.init_app(app)

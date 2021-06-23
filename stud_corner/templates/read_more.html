@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
-{% block title %} {{post.title}} {% endblock %}
+{% block meta -%}
+        <meta name="author" content= "{{ '%s %s' %(post.author.firstname, post.author.lastname) }}">
+        <meta name="description" content="{{ post.title }}">
+        <meta name="keywords" content="{{ post.subject }}">
+{%- endblock %}
+{% block title %} {{ post.title }} {% endblock %}
 
 {% block content %}
     <div class="container col-md-7 mt-3">

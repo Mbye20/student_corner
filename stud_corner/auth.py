@@ -58,7 +58,6 @@ def signin():
 def signout():
     #Remove user from session and logout
     logout_user()
-    #### session.pop('email', None)
     return redirect(url_for('auth.signin'))
 
 
