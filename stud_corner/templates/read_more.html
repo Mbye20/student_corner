@@ -26,22 +26,14 @@
                 </div>
             </div>
         </div>
-        {% if current_user.is_authenticated %}
         <form method="POST">
           <div class="form-floating mb-3">
             {{ textarea("content", id="CommentsTextarea", label = "Comment") }}
           </div>
-          <div class="d-flex mb-3">   
+          <div class="d-flex justify-content-center mb-3">   
             {{ button(class="w-30 btn btn-sm btn-primary") }}
           </div>
-        </form>
-        {% else %}
-          <div class="alert alert-secondary p-1" role="alert">
-            To comment on this post please sign in.
-          </div>
-        {% endif %}
-        
-      {% if comments.total > 0 %}
+        </form>        
           <div class="d-flex w-100 justify-content-between border-bottom border-secondary mb-1">
             <strong>Comments</strong>
             <p>{{comments.total}} {% if comments.total > 1 %}comments{% else %}comment{% endif %}</p>
@@ -57,7 +49,6 @@
               </div>
                 {% endfor %}
           </ul>
-        {% endif %}
     </div>
   {% if comments.total > 10 %}
     {{render_pagination(comments, "views.read_more", id=post.id, name = "pagination for comments" )}}

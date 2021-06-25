@@ -28,7 +28,7 @@ def index():
         )).order_by(Posts.date_posted.desc())
         .paginate(page = page, per_page = 5))
         if pag_posts.total == 0:
-            flash("Nothing related to your search was found.", "warning")
+            flash("Nothing related to your search was found.", "info")
             return redirect(url_for("views.index"))
     else:
         pag_posts = (Posts.query.order_by(Posts.date_posted
@@ -45,7 +45,7 @@ def profile():
         bio = request.form.get("bio")
         user = User.query.filter_by(email=email).first()
         if user and user != current_user:
-            flash("An account has already been created with this email address.", "warning")
+            flash("An account has already been created with this email address.", "info")
             return redirect(url_for("views.profile"))
         elif bio != current_user.bio and email == current_user.email:
             current_user.bio = bio
@@ -67,7 +67,7 @@ def profile():
             flash("Your Profile is Updated Succesfully!", "success")
             return redirect(url_for("views.profile"))
         else:
-            flash("No change have been made on your profile!", "warning")
+            flash("No change have been made on your profile!", "info")
             return redirect(url_for("views.profile"))
 
     return render_template(
@@ -108,7 +108,7 @@ def post():
         )).order_by(Posts.date_posted.desc())
         .paginate(page = page, per_page = 5))
         if current_user_posts.total == 0:
-            flash("Nothing related to your search was found.", "warning")
+            flash("Nothing related to your search was found.", "info")
             return redirect(url_for("views.post"))
     else:
         current_user_posts = (Posts.query.filter_by(user_id = current_user.id)
@@ -131,7 +131,7 @@ def author(id):
         )).order_by(Posts.date_posted.desc())
         .paginate(page = page, per_page = 5))
         if author_posts.total == 0:
-            flash("Nothing related to your search was found.", "warning")
+            flash("Nothing related to your search was found.", "info")
             return redirect(url_for("views.author", id = author.id))
     else:
         author_posts = (Posts.query.filter_by(user_id = author.id)
@@ -145,13 +145,16 @@ def read_more(id):
     page = request.args.get("page", 1, int)
 
     if request.method == "POST":
-        content = request.form.get("content")
-        comment = Comments(content=content, commentor=current_user, post = post)
-        db.session.add(comment)
-        db.session.commit()
-        flash("You commented successfully.", "success")
-        return redirect(url_for("views.read_more", id = post.id ))
-
+        if current_user.is_authenticated:
+            content = request.form.get("content")
+            comment = Comments(content=content, commentor=current_user, post = post)
+            db.session.add(comment)
+            db.session.commit()
+            flash("You commented successfully.", "success")
+            return redirect(url_for("views.read_more", id = post.id ))
+        else:
+            flash("Please sign in to comment on this post.", "info")
+            return redirect(url_for("views.read_more", id = post.id ))
     comments = (Comments.query.filter_by(post_id = post.id)
     .order_by(Comments.date_commented.desc())
     .paginate(page = page, per_page = 10))
