@@ -23,3 +23,11 @@
 .card-bg{
   background-color: #f5f8fa;
 }
+
+#CommentsTextarea{
+  height: 100px;
+}
+
+.comment-header{
+  background-color: #232247;
+}

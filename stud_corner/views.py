@@ -1,12 +1,10 @@
-from re import search
 from flask import abort
 from flask import Blueprint, request, render_template, url_for, flash, redirect
 from flask_login import current_user
 from flask_login.utils import login_required
 from sqlalchemy import or_
-from sqlalchemy.orm import query
 from . import db
-from .models import Posts, User
+from .models import Comments, Posts, User
 
 
 views = Blueprint('views', __name__)
@@ -141,10 +139,26 @@ def author(id):
         .paginate(page = page, per_page = 5))
     return render_template("/author.html", author = author, author_posts = author_posts)
 
-@views.route('/read_more/<int:id>')
+@views.route('/read_more/<int:id>', methods = ['GET', 'POST'])
 def read_more(id):
     post = Posts.query.get_or_404(id)
-    return render_template("/read_more.html", post = post)
+    page = request.args.get("page", 1, int)
+
+    if request.method == "POST":
+        content = request.form.get("content")
+        comment = Comments(content=content, commentor=current_user, post = post)
+        db.session.add(comment)
+        db.session.commit()
+        flash("You commented successfully.", "success")
+        return redirect(url_for("views.read_more", id = post.id ))
+
+    comments = (Comments.query.filter_by(post_id = post.id)
+    .order_by(Comments.date_commented.desc())
+    .paginate(page = page, per_page = 10))
+        
+    return render_template("/read_more.html", post = post, comments=comments)
+
+
 
 @views.route('/update_post/<int:id>', methods = ['GET', 'POST'])
 @login_required

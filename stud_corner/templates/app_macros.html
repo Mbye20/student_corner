@@ -1,15 +1,16 @@
 
-{% macro render_pagination(pagination, endpoint, name="Post page navigation") -%}
+<!--Pagination macros-->
+{% macro render_pagination(pagination, endpoint, id="", name="Post page navigation") -%}
 
   <nav aria-label="{{ name }}">
     <ul class="pagination justify-content-center mt-5">
       <li class="page-item {% if not pagination.has_prev %} disabled {% endif %} ">
-          <a class="page-link" href="{{ url_for(endpoint, page=pagination.prev_num) }}">Previous</a>
+          <a class="page-link" href="{{ url_for(endpoint, id=id, page=pagination.prev_num) }}">Previous</a>
       </li>
       {%- for page in pagination.iter_pages(left_edge=1, left_current=1, right_current=2, right_edge=1) %}
           {% if page %}
                 {% if page != pagination.page %}
-                      <li class="page-item"><a class="page-link" href="{{ url_for(endpoint, page=page) }}"> {{ page }} </a></li>
+                      <li class="page-item"><a class="page-link" href="{{ url_for(endpoint, id=id, page=page) }}"> {{ page }} </a></li>
                 {% else %}
                     <li class="page-item active" aria-current="page">
                         <span class="page-link"> {{ page }} </span>
@@ -20,25 +21,30 @@
           {% endif %}
       {%- endfor %}
               <li class="page-item {% if not pagination.has_next %} disabled {% endif %} ">
-                  <a class="page-link" href="{{ url_for(endpoint, page=pagination.next_num) }}">Next</a>
+                  <a class="page-link" href="{{ url_for(endpoint, id=id, page=pagination.next_num) }}">Next</a>
               </li>
           </ul>      
   </nav>
 
 {%- endmacro %}
 
+
+<!--Input macros-->
 {% macro input(name, type="text", label = "", value = "") -%}
     <input type="{{ type }}" name="{{ name }}" value="{{ value }}" class="form-control" placeholder="name@example.com" autocomplete="off" autofocus required>
     <label for="floatingInput">{{ label }}</label>
 
 {%- endmacro %}
 
-{% macro button(label = "Submit") -%}
-    <button class="w-30 btn btn-lg btn-primary" type="submit">{{ label }}</button>
+<!--Buttons macros-->
+{% macro button(class="w-30 btn btn-lg btn-primary", label = "Submit") -%}
+    <button class="{{ class }}" type="submit">{{ label }}</button>
 {%- endmacro %}
 
 
-{% macro textarea(name, value="", label = "") -%}
-    <textarea name="{{ name }}" class="form-control" id="floatingTextarea2"  placeholder="This is my post...">{{ value }}</textarea>
+<!--Textarea macros-->
+{% macro textarea(name, id="", value="", label = "") -%}
+    <textarea name="{{ name }}" id="{{ id }}" class="form-control" placeholder="This is my post..." required>{{ value }}</textarea>
     <label for="floatingTextarea2">{{ label }}</label>
 {%- endmacro %}
+

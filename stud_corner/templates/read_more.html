@@ -1,4 +1,7 @@
+{% from "app_macros.html" import render_pagination, input, button, textarea with context %}
+
 {% extends "layout.html" %}
+
 {% block meta %}
       <meta name="author" content= "{{ '%s %s' %(post.author.firstname, post.author.lastname) }}">
       <meta name="description" content="{{ post.title }}">
@@ -7,21 +10,57 @@
 {% block title %} {{ post.title }} {% endblock %}
 
 {% block content %}
-    <div class="container col-md-7 mt-3">
+    <div class="container col-md-7 my-3">
         <div class="row justify-content-center">
-          <div class="row g-0 border rounded overflow-hidden mb-4 shadow-sm h-md-250 position-relative">
-            <div class="col p-4 d-flex flex-column position-static">
-                <strong class="d-inline-block mb-2 text-success">{{ post.subject |title }}</strong>
-                <h3 class="mb-0">{{ post.title |title }}</h3>
-                <div class="mb-1 text-muted">{{ post.date_posted.strftime("%d %B %Y") }}
-                     by 
-                     <a href="{{ url_for('views.author', id = post.author.id) }}" class="text-decoration-none link-dark">
-                         {{ ("%s %s" %(post.author.firstname, post.author.lastname)) |title}}
-                     </a>
+            <div class="row g-0 border rounded overflow-hidden mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-success">{{ post.subject |title }}</strong>
+                    <h3 class="mb-0">{{ post.title |title }}</h3>
+                    <div class="mb-1 text-muted">{{ post.date_posted.strftime("%d %B %Y") }}
+                        by 
+                        <a href="{{ url_for('views.author', id = post.author.id) }}" class="text-decoration-none link-dark">
+                            {{ ("%s %s" %(post.author.firstname, post.author.lastname)) |title}}
+                        </a>
+                    </div>
+                    <p class="card-text mb-auto content">{{ post.content |urlize }}</p> 
                 </div>
-                <p class="card-text mb-auto content">{{ post.content |urlize }}</p> 
             </div>
-          </div>
         </div>
+        {% if current_user.is_authenticated %}
+        <form method="POST">
+          <div class="form-floating mb-3">
+            {{ textarea("content", id="CommentsTextarea", label = "Comment") }}
+          </div>
+          <div class="d-flex mb-3">   
+            {{ button(class="w-30 btn btn-sm btn-primary") }}
+          </div>
+        </form>
+        {% else %}
+          <div class="alert alert-secondary p-1" role="alert">
+            To comment on this post please sign in.
+          </div>
+        {% endif %}
+        
+      {% if comments.total > 0 %}
+          <div class="d-flex w-100 justify-content-between border-bottom border-secondary mb-1">
+            <strong>Comments</strong>
+            <p>{{comments.total}} {% if comments.total > 1 %}comments{% else %}comment{% endif %}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+              {% for comment in comments.items %}
+              <div class="mb-2">
+                <div class="d-flex w-100 justify-content-between px-1">
+                  <strong>{{ comment.commentor.firstname }} {{ comment.commentor.lastname }}</strong>
+                  <small>{{ comment.date_commented.strftime("%d %B %Y") }} at {{ comment.date_commented.strftime("%H:%M") }}</small>
+                </div>
+                <p class="mb-1">{{ comment.content }}</p>
+              </div>
+                {% endfor %}
+          </ul>
+        {% endif %}
     </div>
+  {% if comments.total > 10 %}
+    {{render_pagination(comments, "views.read_more", id=post.id, name = "pagination for comments" )}}
+  {% endif %}
 {% endblock %}
+    
