@@ -42,7 +42,11 @@
               {% for comment in comments.items %}
               <div class="mb-2">
                 <div class="d-flex w-100 justify-content-between px-1">
-                  <strong>{{ comment.commentor.firstname }} {{ comment.commentor.lastname }}</strong>
+                  <strong>
+                    <a href="{{ url_for('views.author', id = comment.commentor.id) }}" class="text-decoration-none link-dark">
+                      {{ comment.commentor.firstname }} {{ comment.commentor.lastname }}
+                    </a>
+                  </strong>
                   <small>{{ comment.date_commented.strftime("%d %B %Y") }} at {{ comment.date_commented.strftime("%H:%M") }} (UTC)</small>
                 </div>
                 <p class="mb-1">{{ comment.content }}</p>
