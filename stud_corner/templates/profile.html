@@ -20,7 +20,7 @@
             </div>
             <div class="form-floating mb-3">
                 {% if bio %}
-                    {{ textarea("bio", value = bio , label = "Add Bio") }}
+                    {{ textarea("bio", id="floatingTextarea2", value = bio , label = "Add Bio") }}
                 {% else %}
                     {{ textarea("bio", id="floatingTextarea2", value = "This is my bio..." , label = "Add Bio") }}
                 {% endif %}
