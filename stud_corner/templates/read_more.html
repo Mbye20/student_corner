@@ -51,7 +51,7 @@
               <div class="mb-2">
                 <div class="d-flex w-100 justify-content-between px-1">
                   <strong>{{ comment.commentor.firstname }} {{ comment.commentor.lastname }}</strong>
-                  <small>{{ comment.date_commented.strftime("%d %B %Y") }} at {{ comment.date_commented.strftime("%H:%M") }}</small>
+                  <small>{{ comment.date_commented.strftime("%d %B %Y") }} at {{ comment.date_commented.strftime("%H:%M") }} (UTC)</small>
                 </div>
                 <p class="mb-1">{{ comment.content }}</p>
               </div>
