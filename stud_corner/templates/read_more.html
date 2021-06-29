@@ -38,16 +38,16 @@
             <strong>Comments</strong>
             <p>{{comments.total}} {% if comments.total > 1 %}comments{% else %}comment{% endif %}</p>
           </div>
-          <ul class="list-group list-group-flush">
+          <ul class="list-group">
               {% for comment in comments.items %}
-              <div class="mb-2">
-                <div class="d-flex w-100 justify-content-between px-1">
+              <div class="mb-2 border">
+                <div class="d-flex w-100 justify-content-between px-1 border-bottom">
                   <strong>
                     <a href="{{ url_for('views.author', id = comment.commentor.id) }}" class="text-decoration-none link-dark">
                       {{ comment.commentor.firstname }} {{ comment.commentor.lastname }}
                     </a>
                   </strong>
-                  <small>{{ comment.date_commented.strftime("%d %B %Y") }} at {{ comment.date_commented.strftime("%H:%M") }} (UTC)</small>
+                  <small time-delta="{{ comment.date_commented }}" ></small>
                 </div>
                 <p class="mb-1 content">{{ comment.content }}</p>
               </div>
