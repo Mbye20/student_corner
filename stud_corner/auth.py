@@ -90,10 +90,7 @@ def signup():
         new_user = User(
             firstname= firstname,
             lastname=lastname,
-            email=email, password = generate_password_hash(password1),
-            admin=False,
-            confirmed=False,
-            confirmed_on= None
+            email=email, password = generate_password_hash(password1)
             )
         
         db.session.add(new_user)
