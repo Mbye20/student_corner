@@ -137,9 +137,9 @@ def confirm_email(token):
                 "success"
                 )
 
+            return redirect(url_for("auth.signin"))
     except:
         return redirect(url_for("auth.error"))
-    return redirect(url_for("auth.signin"))
 
 @auth.route('/resend_confirmation', methods = ['POST', 'GET'])
 def resend_confirmation():
